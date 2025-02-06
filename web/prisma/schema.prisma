@@ -1,0 +1,194 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AuthProviderType {
+  GOOGLE
+  GITHUB
+  // Add more wallet types as needed
+}
+
+enum WalletProviderType {
+  METAMASK
+  PHANTOM
+  BYBIT
+  WALLETCONNECT
+  // Add more wallet types as needed
+}
+
+model AuthProvider {
+  id        String           @id @default(uuid())
+  type      AuthProviderType
+  users     User[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
+model WalletProvider {
+  id        String           @id @default(uuid())
+  type      WalletProviderType
+  users     User[]
+  connectedAt DateTime        @default(now())
+  disconnectedAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  name          String?
+  username      String?
+  password      String?
+  isActive      Boolean  @default(false)
+  isVerified    Boolean  @default(false)
+  authProviderId String  @unique
+  walletProviderId String  @unique
+  authProvider    AuthProvider  @relation(fields: [authProviderId], references: [id])
+  walletProvider    WalletProvider  @relation(fields: [walletProviderId], references: [id])
+  walletAddress String?  @unique
+  avatarUrl     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  organizations UserOrganization[]
+  ownedOrganizations Organization[] @relation("OwnedOrganizations")
+  activities    Activity[]
+}
+
+model Organization {
+  id            String   @id @default(uuid())
+  name          String
+  slug          String   @unique
+  ownerId       String
+  planType       PlanType @default(FREE)
+  stripePriceId String?
+  stripeCustomerId String?
+  avatarUrl     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  users         UserOrganization[]
+  projects      Project[]
+  billingHistory BillingHistory[]
+  apiKeys       ApiKey[]
+  owner         User     @relation("OwnedOrganizations", fields: [ownerId], references: [id], onDelete: Cascade)
+}
+
+enum PlanType {
+  FREE
+  GOLD
+  SILVER
+  TITANIUM
+  ENTERPRISE
+}
+
+model UserOrganization {
+  id             String   @id @default(uuid())
+  userId         String
+  organizationId String
+  role           Role     @default(VIEWER)
+  inviteStatus   InviteStatus @default(ACCEPTED)
+  joinedAt       DateTime @default(now())
+
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  DEVELOPER
+  VIEWER
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+model Project {
+  id              String   @id @default(uuid())
+  name            String
+  slug            String   @unique
+  organizationId  String
+  type            ProjectType
+  repository      String?
+  deploymentUrl   String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  deployments     Deployment[]
+  apiKeys         ApiKey[]
+  activities      Activity[]
+}
+
+enum ProjectType {
+  WEB2
+  WEB3
+  API
+}
+
+model Deployment {
+  id          String   @id @default(uuid())
+  projectId   String
+  status      DeploymentStatus
+  commitHash  String?
+  branch      String?
+  logs        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+enum DeploymentStatus {
+  QUEUED
+  BUILDING
+  SUCCEEDED
+  FAILED
+}
+
+model BillingHistory {
+  id              String   @id @default(uuid())
+  organizationId  String
+  amount          Float
+  currency        String
+  status          String
+  paymentMethod   String   // STRIPE, USDC, SOL, ETH
+  transactionHash String?
+  createdAt       DateTime @default(now())
+
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+model ApiKey {
+  id              String   @id @default(uuid())
+  name            String
+  key             String   @unique
+  organizationId  String
+  projectId       String?
+  expiresAt       DateTime?
+  createdAt       DateTime @default(now())
+
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  project         Project?     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Activity {
+  id              String   @id @default(uuid())
+  userId          String
+  projectId       String?
+  action          String
+  metadata        Json?
+  createdAt       DateTime @default(now())
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project         Project? @relation(fields: [projectId], references: [id])
+}
