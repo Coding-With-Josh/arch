@@ -6,7 +6,7 @@ import { LinkButton } from "@/components/custom/link-button";
 
 export default function Home() {
 
-  return (<div className="w-screen min-h-screen flex items-center bg-black">
+  return (<div className="w-screen min-h-screen flex items-center bg-zinc-950">
    
     <HeroSectionDemo/>
     </div>

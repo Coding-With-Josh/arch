@@ -10,6 +10,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        "color-1": "hsl(var(--color-1))",
+        "color-2": "hsl(var(--color-2))",
+        "color-3": "hsl(var(--color-3))",
+        "color-4": "hsl(var(--color-4))",
+        "color-5": "hsl(var(--color-5))",
 		brand: "hsl(var(--brand))",
         "brand-foreground": "hsl(var(--brand-foreground))",
         background: "hsl(var(--background))",
@@ -96,7 +101,11 @@ const config: Config = {
         "appear-zoom": {
           "0%": { opacity: "0", transform: "scale(0.95)" },
           "100%": { opacity: "1", transform: "scale(1)" }
-        }
+        },
+        rainbow: {
+          "0%": { "background-position": "0%" },
+          "100%": { "background-position": "200%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -104,6 +113,7 @@ const config: Config = {
         "spin-slow": "spin 15s linear infinite",
         appear: "appear 0.5s ease-out forwards",
         "appear-zoom": "appear-zoom 0.5s ease-out forwards",
+        rainbow: "rainbow var(--speed, 2s) infinite linear",
       },
     },
   },

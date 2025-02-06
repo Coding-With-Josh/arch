@@ -13,7 +13,7 @@ export function HeroSectionDemo() {
           href: "/docs",
         },
       }}
-      title="Build faster with beautiful components"
+      title="Build. Ship. Scale"
       description="Premium UI components built with React and Tailwind CSS. Save time and ship your next project faster with our ready-to-use components."
       actions={[
         {
@@ -24,7 +24,7 @@ export function HeroSectionDemo() {
         {
           text: "GitHub",
           href: "https://github.com/Coding-With-Josh/arch",
-          variant: "ghost",
+          variant: "secondary",
           icon: <Icons.gitHub className="h-5 w-5" />,
         },
       ]}
