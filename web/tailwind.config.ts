@@ -74,6 +74,10 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        'caret-blink': {
+          '0%,70%,100%': { opacity: '1' },
+          '20%,50%': { opacity: '0' },
+        },
         "accordion-down": {
           from: {
             height: "0",
@@ -111,6 +115,7 @@ const config: Config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "spin-slow": "spin 15s linear infinite",
+        'caret-blink': 'caret-blink 1.25s ease-out infinite',
         appear: "appear 0.5s ease-out forwards",
         "appear-zoom": "appear-zoom 0.5s ease-out forwards",
         rainbow: "rainbow var(--speed, 2s) infinite linear",

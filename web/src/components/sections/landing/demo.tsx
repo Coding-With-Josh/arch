@@ -13,8 +13,8 @@ export function HeroSectionDemo() {
           href: "/docs",
         },
       }}
-      title="Build. Ship. Scale"
-      description="Premium UI components built with React and Tailwind CSS. Save time and ship your next project faster with our ready-to-use components."
+      title="Build. Ship. Scale."
+      description="The world's first multi-ecosystem, multi-chain developer tool. Build, deploy, scale and connect, all in one platform."
       actions={[
         {
           text: "Get Started",

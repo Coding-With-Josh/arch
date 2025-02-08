@@ -30,13 +30,13 @@ const Glow = React.forwardRef<
 >
     <div
         className={cn(
-        "absolute left-1/2 h-[256px] w-[60%] -translate-x-1/2 scale-[2.5] rounded-[50%] bg-[radial-gradient(ellipse_at_center,_rgba(0,0,255,0.5)_10%,_rgba(0,0,255,0)_35%)] sm:h-[512px]",
+        "absolute left-1/2 h-[256px] w-[60%] -translate-x-1/2 scale-[2.5] rounded-[50%] bg-[radial-gradient(ellipse_at_center,_rgba(0,0,255,0.5)_3%,_rgba(0,0,255,0)_35%)] sm:h-[512px]",
         variant === "center" && "-translate-y-1/2",
       )}
     />
     <div
       className={cn(
-        "absolute left-1/2 h-[128px] w-[40%] -translate-x-1/2 scale-[2] rounded-[50%] bg-[radial-gradient(ellipse_at_center,_rgba(0,0,255,0.3)_10%,_rgba(0,0,255,0)_30%)] sm:h-[256px]",
+        "absolute left-1/2 h-[128px] w-[40%] -translate-x-1/2 scale-[2] rounded-[50%] bg-[radial-gradient(ellipse_at_center,_rgba(0,0,255,0.3)_5%,_rgba(0,0,255,0)_30%)] sm:h-[256px]",
         variant === "center" && "-translate-y-1/2",
       )}
     />
