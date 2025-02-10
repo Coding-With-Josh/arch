@@ -18,18 +18,18 @@ import { cn } from '@/lib/utils'
 
 export default function SignInPage() {
   return (
-    <div className="grid w-full grow items-center px-4 sm:justify-center">
+    <div className="grid w-full min-h-screen grow items-center bg-zinc-950 px-4 sm:justify-center">
       <SignIn.Root>
-        <Clerk.Loading>
-          {(isGlobalLoading) => (
-            <>
-              <SignIn.Step name="start">
-                <Card className="w-full sm:w-96">
-                  <CardHeader>
-                    <CardTitle>Sign in to Acme Co</CardTitle>
-                    <CardDescription>Welcome back! Please sign in to continue</CardDescription>
+      <Clerk.Loading>
+        {(isGlobalLoading) => (
+        <>
+          <SignIn.Step name="start">
+                <Card className="w-full border-zinc-800 bg-zinc-900/50 backdrop-blur sm:w-96">
+                  <CardHeader className="space-y-1">
+                    <CardTitle className="text-2xl font-bold tracking-tight text-zinc-100">Welcome back</CardTitle>
+                    <CardDescription className="text-zinc-400">Sign in to continue to your account</CardDescription>
                   </CardHeader>
-                  <CardContent className="grid gap-y-4">
+                  <CardContent className="grid gap-y-6">
                     <div className="grid grid-cols-2 gap-x-4">
                       <Clerk.Connection name="github" asChild>
                         <Button
@@ -37,6 +37,7 @@ export default function SignInPage() {
                           variant="outline"
                           type="button"
                           disabled={isGlobalLoading}
+                          className="border-zinc-800 bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
                         >
                           <Clerk.Loading scope="provider:github">
                             {(isLoading) =>
@@ -58,6 +59,7 @@ export default function SignInPage() {
                           variant="outline"
                           type="button"
                           disabled={isGlobalLoading}
+                          className="border-zinc-800 bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
                         >
                           <Clerk.Loading scope="provider:google">
                             {(isLoading) =>
@@ -74,36 +76,30 @@ export default function SignInPage() {
                         </Button>
                       </Clerk.Connection>
                     </div>
-                    <p className="flex items-center gap-x-3 text-sm text-muted-foreground before:h-px before:flex-1 before:bg-border after:h-px after:flex-1 after:bg-border">
-                      or
+                    <p className="flex items-center gap-x-3 text-sm text-zinc-500 before:h-px before:flex-1 before:bg-zinc-800 after:h-px after:flex-1 after:bg-zinc-800">
+                      or continue with email
                     </p>
                     <Clerk.Field name="identifier" className="space-y-2">
                       <Clerk.Label asChild>
-                        <Label>Email address</Label>
+                        <Label className="text-zinc-300">Email address</Label>
                       </Clerk.Label>
                       <Clerk.Input type="email" required asChild>
-                        <Input />
+                        <Input className="border-zinc-800 bg-zinc-900 text-zinc-100" />
                       </Clerk.Input>
-                      <Clerk.FieldError className="block text-sm text-destructive" />
+                      <Clerk.FieldError className="block text-sm text-red-500" />
                     </Clerk.Field>
                   </CardContent>
                   <CardFooter>
                     <div className="grid w-full gap-y-4">
                       <SignIn.Action submit asChild>
-                        <Button disabled={isGlobalLoading}>
+                        <Button className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200" disabled={isGlobalLoading}>
                           <Clerk.Loading>
-                            {(isLoading) => {
-                              return isLoading ? (
-                                <Icons.spinner className="size-4 animate-spin" />
-                              ) : (
-                                'Continue'
-                              )
-                            }}
+                            {(isLoading) => isLoading ? <Icons.spinner className="size-4 animate-spin" /> : 'Continue'}
                           </Clerk.Loading>
                         </Button>
                       </SignIn.Action>
 
-                      <Button variant="link" size="sm" asChild>
+                      <Button variant="link" size="sm" asChild className="text-zinc-400 hover:text-zinc-100">
                         <Clerk.Link navigate="sign-up">
                           Don&apos;t have an account? Sign up
                         </Clerk.Link>
@@ -114,21 +110,21 @@ export default function SignInPage() {
               </SignIn.Step>
 
               <SignIn.Step name="choose-strategy">
-                <Card className="w-full sm:w-96">
-                  <CardHeader>
-                    <CardTitle>Use another method</CardTitle>
-                    <CardDescription>
+                <Card className="w-full border-zinc-800 bg-zinc-900/50 backdrop-blur sm:w-96">
+                  <CardHeader className="space-y-1">
+                    <CardTitle className="text-2xl font-bold tracking-tight text-zinc-100">Use another method</CardTitle>
+                    <CardDescription className="text-zinc-400">
                       Facing issues? You can use any of these methods to sign in.
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="grid gap-y-4">
+                  <CardContent className="grid gap-y-6">
                     <SignIn.SupportedStrategy name="email_code" asChild>
-                      <Button type="button" variant="link" disabled={isGlobalLoading}>
+                      <Button type="button" variant="link" disabled={isGlobalLoading} className="text-zinc-400 hover:text-zinc-100">
                         Email code
                       </Button>
                     </SignIn.SupportedStrategy>
                     <SignIn.SupportedStrategy name="password" asChild>
-                      <Button type="button" variant="link" disabled={isGlobalLoading}>
+                      <Button type="button" variant="link" disabled={isGlobalLoading} className="text-zinc-400 hover:text-zinc-100">
                         Password
                       </Button>
                     </SignIn.SupportedStrategy>
@@ -136,7 +132,7 @@ export default function SignInPage() {
                   <CardFooter>
                     <div className="grid w-full gap-y-4">
                       <SignIn.Action navigate="previous" asChild>
-                        <Button disabled={isGlobalLoading}>
+                        <Button className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200" disabled={isGlobalLoading}>
                           <Clerk.Loading>
                             {(isLoading) => {
                               return isLoading ? (
@@ -155,31 +151,31 @@ export default function SignInPage() {
 
               <SignIn.Step name="verifications">
                 <SignIn.Strategy name="password">
-                  <Card className="w-full sm:w-96">
-                    <CardHeader>
-                      <CardTitle>Check your email</CardTitle>
-                      <CardDescription>
+                  <Card className="w-full border-zinc-800 bg-zinc-900/50 backdrop-blur sm:w-96">
+                    <CardHeader className="space-y-1">
+                      <CardTitle className="text-2xl font-bold tracking-tight text-zinc-100">Check your email</CardTitle>
+                      <CardDescription className="text-zinc-400">
                         Enter the verification code sent to your email
                       </CardDescription>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-zinc-500">
                         Welcome back <SignIn.SafeIdentifier />
                       </p>
                     </CardHeader>
-                    <CardContent className="grid gap-y-4">
+                    <CardContent className="grid gap-y-6">
                       <Clerk.Field name="password" className="space-y-2">
                         <Clerk.Label asChild>
-                          <Label>Password</Label>
+                          <Label className="text-zinc-300">Password</Label>
                         </Clerk.Label>
                         <Clerk.Input type="password" asChild>
-                          <Input />
+                          <Input className="border-zinc-800 bg-zinc-900 text-zinc-100" />
                         </Clerk.Input>
-                        <Clerk.FieldError className="block text-sm text-destructive" />
+                        <Clerk.FieldError className="block text-sm text-red-500" />
                       </Clerk.Field>
                     </CardContent>
                     <CardFooter>
                       <div className="grid w-full gap-y-4">
                         <SignIn.Action submit asChild>
-                          <Button disabled={isGlobalLoading}>
+                          <Button className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200" disabled={isGlobalLoading}>
                             <Clerk.Loading>
                               {(isLoading) => {
                                 return isLoading ? (
@@ -192,7 +188,7 @@ export default function SignInPage() {
                           </Button>
                         </SignIn.Action>
                         <SignIn.Action navigate="choose-strategy" asChild>
-                          <Button type="button" size="sm" variant="link">
+                          <Button type="button" size="sm" variant="link" className="text-zinc-400 hover:text-zinc-100">
                             Use another method
                           </Button>
                         </SignIn.Action>
@@ -202,17 +198,17 @@ export default function SignInPage() {
                 </SignIn.Strategy>
 
                 <SignIn.Strategy name="email_code">
-                  <Card className="w-full sm:w-96">
-                    <CardHeader>
-                      <CardTitle>Check your email</CardTitle>
-                      <CardDescription>
+                  <Card className="w-full border-zinc-800 bg-zinc-900/50 backdrop-blur sm:w-96">
+                    <CardHeader className="space-y-1">
+                      <CardTitle className="text-2xl font-bold tracking-tight text-zinc-100">Check your email</CardTitle>
+                      <CardDescription className="text-zinc-400">
                         Enter the verification code sent to your email
                       </CardDescription>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-zinc-500">
                         Welcome back <SignIn.SafeIdentifier />
                       </p>
                     </CardHeader>
-                    <CardContent className="grid gap-y-4">
+                    <CardContent className="grid gap-y-6">
                       <Clerk.Field name="code">
                         <Clerk.Label className="sr-only">Email verification code</Clerk.Label>
                         <div className="grid gap-y-2 items-center justify-center">
@@ -225,7 +221,7 @@ export default function SignInPage() {
                                 return (
                                   <div
                                     data-status={status}
-                                    className="relative flex h-9 w-9 items-center justify-center border-y border-r border-input text-sm shadow-sm transition-all first:rounded-l-md first:border-l last:rounded-r-md data-[status=selected]:ring-1 data-[status=selected]:ring-ring data-[status=cursor]:ring-1 data-[status=cursor]:ring-ring"
+                                    className="relative flex h-9 w-9 items-center justify-center border-y border-r border-zinc-800 text-sm shadow-sm transition-all first:rounded-l-md first:border-l last:rounded-r-md data-[status=selected]:ring-1 data-[status=selected]:ring-ring data-[status=cursor]:ring-1 data-[status=cursor]:ring-ring"
                                   >
                                     {value}
                                   </div>
@@ -233,11 +229,11 @@ export default function SignInPage() {
                               }}
                             />
                           </div>
-                          <Clerk.FieldError className="block text-sm text-destructive text-center" />
+                          <Clerk.FieldError className="block text-sm text-red-500 text-center" />
                           <SignIn.Action
                             asChild
                             resend
-                            className="text-muted-foreground"
+                            className="text-zinc-400"
                             fallback={({ resendableAfter }) => (
                               <Button variant="link" size="sm" disabled>
                                 Didn&apos;t receive a code? Resend (
@@ -245,7 +241,7 @@ export default function SignInPage() {
                               </Button>
                             )}
                           >
-                            <Button variant="link" size="sm">
+                            <Button variant="link" size="sm" className="text-zinc-400 hover:text-zinc-100">
                               Didn&apos;t receive a code? Resend
                             </Button>
                           </SignIn.Action>
@@ -255,7 +251,7 @@ export default function SignInPage() {
                     <CardFooter>
                       <div className="grid w-full gap-y-4">
                         <SignIn.Action submit asChild>
-                          <Button disabled={isGlobalLoading}>
+                          <Button className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200" disabled={isGlobalLoading}>
                             <Clerk.Loading>
                               {(isLoading) => {
                                 return isLoading ? (
@@ -268,7 +264,7 @@ export default function SignInPage() {
                           </Button>
                         </SignIn.Action>
                         <SignIn.Action navigate="choose-strategy" asChild>
-                          <Button size="sm" variant="link">
+                          <Button size="sm" variant="link" className="text-zinc-400 hover:text-zinc-100">
                             Use another method
                           </Button>
                         </SignIn.Action>
