@@ -39,7 +39,7 @@ export function TeamSwitcher({ teams }: { teams: any[] }) {
                 <span className="truncate font-medium text-zinc-100">{activeTeam.name}</span>
                 <span className="truncate text-xs text-zinc-400">{activeTeam.plan}</span>
               </div>
-              <ChevronsUpDown className="ml-auto text-zinc-400" />
+              <ChevronsUpDown className="ml-auto text-zinc-400 h-4 w-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -55,19 +55,19 @@ export function TeamSwitcher({ teams }: { teams: any[] }) {
               <DropdownMenuItem
                 key={team.name}
                 onClick={() => setActiveTeam(team)}
-                className="gap-2 p-2"
+                className="gap-2 p-2 text-white"
               >
-                <div className="flex size-6 items-center justify-center rounded-sm border">
+                <div className="flex size-6 items-center justify-center rounded-sm border border-[#1F1F23]">
                   <team.logo className="size-4 shrink-0" />
                 </div>
                 {team.name}
                 <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
               </DropdownMenuItem>
             ))}
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="bg-[#1F1F23]" />
             <DropdownMenuItem className="gap-2 p-2">
-              <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                <Plus className="size-4" />
+              <div className="flex size-6 items-center justify-center rounded-md text-white bg-zinc-800">
+                <Plus className="size-3" />
               </div>
               <div className="font-medium text-muted-foreground">Add team</div>
             </DropdownMenuItem>

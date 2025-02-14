@@ -34,13 +34,13 @@ export function NavUser({ user }: { user: any }) {
   const { isMobile } = useSidebar()
 
   return (
-    <SidebarMenu>
+    <SidebarMenu className="w-full">
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-zinc-800 data-[state=open]:text-zinc-100"
+              className="data-[state=open]:bg-zinc-800 data-[state=open]:text-zinc-100 w-full"
             >
               <div className="size-8 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center">
                 <span className="text-xs font-medium text-zinc-400">
@@ -54,52 +54,56 @@ export function NavUser({ user }: { user: any }) {
               <ChevronsUpDown className="ml-auto size-4 text-zinc-400" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-          <DropdownMenuContent
+            <DropdownMenuContent
             className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg bg-zinc-900 border-zinc-800"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
-          >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
-                </div>
+            > 
+            <DropdownMenuLabel className="text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 px-1 py-1.5">
+              <Avatar className="size-8 ro  unded-lg">
+                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold text-white">{user.name}</span>
+                <span className="truncate text-xs text-muted-foreground">{user.email}</span>
+              </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="bg-[#1F1F23]" />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
+              <DropdownMenuItem className="gap-2 p-2 text-white">
+              <div className="flex size-6 items-center justify-center rounded-sm border border-[#1F1F23]">
+                <Sparkles className="size-4 shrink-0" />
+              </div>
+              Upgrade to Pro
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="bg-[#1F1F23]" />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+              {[
+              { icon: BadgeCheck, label: 'Account' },
+              { icon: CreditCard, label: 'Billing' },
+              { icon: Bell, label: 'Notifications' },
+              ].map(({ icon: Icon, label }) => (
+              <DropdownMenuItem key={label} className="gap-2 p-2 text-white">
+                <div className="flex size-6 items-center justify-center rounded-sm border border-[#1F1F23]">
+                <Icon className="size-4 shrink-0" />
+                </div>
+                {label}
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
+              ))}
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
+            <DropdownMenuSeparator className="bg-[#1F1F23]" />
+            <DropdownMenuItem className="gap-2 p-2 text-white">
+              <div className="flex size-6 items-center justify-center rounded-sm border border-[#1F1F23]">
+              <LogOut className="size-4 shrink-0" />
+              </div>
               Log out
             </DropdownMenuItem>
-          </DropdownMenuContent>
+            </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>

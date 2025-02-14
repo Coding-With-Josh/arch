@@ -159,12 +159,12 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar variant="floating" {...props} className="bg-zinc-950">
+    <Sidebar variant="floating" {...props} className="bg-zinc-950 scrollbar-custom">
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent className="px-2">
-        <NavMain items={data.navMain} />
+        <NavMain/>
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter className="px-4 py-2">
