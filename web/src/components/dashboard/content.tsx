@@ -8,7 +8,7 @@ import ActivityList from "./activity-list"
 
 export default function Content() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full  ">
       {/* Stats Overview */}
       <StatsList />
 

@@ -12,7 +12,7 @@ export function WalletStatus() {
           variant="outline"
           size="sm"
           className={cn(
-            "h-8 border-zinc-800 bg-zinc-900 relative overflow-hidden",
+            "h-8 border-zinc-800 bg-zinc-900 relative text-white overflow-hidden",
             "hover:bg-zinc-800 hover:text-zinc-100",
             "flex items-center gap-2 rounded-lg group"
           )}    

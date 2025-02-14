@@ -161,7 +161,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant="floating" {...props} className="bg-zinc-950 scrollbar-custom">
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher teams={data.teams} /> 
       </SidebarHeader>
       <SidebarContent className="px-2">
         <NavMain/>
