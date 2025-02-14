@@ -1,41 +1,10 @@
 import { ArrowUpRight, ArrowDownRight, DollarSign, Users, Briefcase, Clock } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-const stats = [
-  {
-    title: "Total Revenue",
-    value: "$45,231.89",
-    change: "+20.1%",
-    trend: "up",
-    icon: DollarSign,
-  },
-  {
-    title: "Active Users",
-    value: "1,234",
-    change: "+12.5%",
-    trend: "up",
-    icon: Users,
-  },
-  {
-    title: "Projects",
-    value: "45",
-    change: "+8.2%",
-    trend: "up",
-    icon: Briefcase,
-  },
-  {
-    title: "Avg. Response",
-    value: "1.2h",
-    change: "-5.4%",
-    trend: "down",
-    icon: Clock,
-  },
-]
-
-export default function StatsList() {
+export default function StatsList(stats: any) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {stats.map((stat) => (
+      {stats.map((stat: any) => (
         <div
           key={stat.title}
           className="bg-[#0F0F12] rounded-xl p-6 border border-[#1F1F23]"

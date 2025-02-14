@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { onboardingSchema, type OnboardingData } from "@/lib/validations/onboarding";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/ui/icons";
@@ -27,17 +30,21 @@ const themes = [
 ];
 
 const Page = () => {
-  const [data, setData] = useState({
-    firstName: "",
-    lastName: "",
-    username: "",
-    walletAddress: "",
-    profilePhoto: "",
-    selectedColor: colors[0],
-    selectedTheme: themes[0],
-    previewImage: "",
-  });
   const [step, setStep] = useState(1);
+  
+  const form = useForm<OnboardingData>({
+    resolver: zodResolver(onboardingSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      username: "",
+      profilePhoto: "",
+      selectedColor: colors[0],
+      selectedTheme: themes[0],
+    },
+  });
+
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = form;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -46,11 +53,39 @@ const Page = () => {
       reader.onloadend = () => {
         const result = reader.result;
         if (typeof result === 'string') {
-          setData({ ...data, previewImage: result });
+          setValue('profilePhoto', result);
         }
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const onSubmit = async (data: OnboardingData) => {
+    try {
+      const response = await fetch('/api/onboarding', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to complete onboarding');
+      }
+
+      window.location.href = '/dashboard';
+    } catch (error) {
+      console.error('Error during onboarding:', error);
+    }
+  };
+
+  const handleColorSelect = (color: typeof colors[0]) => {
+    setValue('selectedColor', color);
+  };
+
+  const handleThemeSelect = (theme: typeof themes[0]) => {
+    setValue('selectedTheme', theme);
   };
 
   return (
@@ -74,63 +109,46 @@ const Page = () => {
                   <div className="space-y-2">
                     <Label className="text-zinc-300">first name</Label>
                     <Input
+                      {...register("firstName")}
                       className="w-full p-3 rounded-md bg-white/5 border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                      value={data.firstName}
                       type="text"
-                      placeholder={data.firstName || "johndoey"}
-                      onChange={(e) =>
-                        setData({
-                          ...data,
-                          firstName: e.target.value,
-                        })
-                      }
+                      placeholder="John"
                     />
-                    {/* {data.firstName} */}
+                    {errors.firstName && (
+                      <span className="text-sm text-red-500">{errors.firstName.message}</span>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label className="text-zinc-300">Last name</Label>
                     <Input
+                      {...register("lastName")}
                       className="w-full p-3 rounded-md bg-white/5 border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                      value={data.lastName}
                       type="text"
-                      onChange={(e) =>
-                        setData({
-                          ...data,
-                          lastName: e.target.value,
-                        })
-                      }
+                      placeholder="Doe"
                     />
-                    {/* {data.lastName} */}
+                    {errors.lastName && (
+                      <span className="text-sm text-red-500">{errors.lastName.message}</span>
+                    )}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label className="text-zinc-300">Username</Label>
                   <Input
+                    {...register("username")}
                     className="w-full p-3 rounded-md bg-white/5 border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                    value={data.username}
                     type="text"
-                    onChange={(e) =>
-                      setData({
-                        ...data,
-                        username: e.target.value,
-                      })
-                    }
+                    placeholder="johndoey"
                   />
-                  {/* {data.username} */}
+                  {errors.username && (
+                    <span className="text-sm text-red-500">{errors.username.message}</span>
+                  )}
                   <div className="space-y-2 mb-4">
                     <Label className="text-zinc-300">Profile photo</Label>
                     <Input
                       className="w-full p-3 rounded-md placeholder:text-white bg-white/5 border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                      // value={data.profilePhoto}
                       type="file"
-                      // onChange={(e) =>
-                      //   setData({
-                      //     ...data,
-                      //     profilePhoto: e.target.value,
-                      //   })
-                      // }
+                      onChange={handleFileChange}
                     />
-                    {/* {data.profilePhoto} */}
                   </div>
                   <div className="space-y-2  mt-6">
                     <Label className="text-zinc-300">
@@ -188,11 +206,11 @@ const Page = () => {
                     {colors.map((color) => (
                       <div
                         key={color.name}
-                        onClick={() => setData(prev => ({ ...prev, selectedColor: color }))}
+                        onClick={() => handleColorSelect(color)}
                         className={cn(
                           "size-8 rounded-full cursor-pointer transition-all duration-200",
                           color.primary,
-                          data.selectedColor.name === color.name ? "ring-2 ring-white ring-offset-2 ring-offset-zinc-900" : ""
+                          watch('selectedColor').name === color.name ? "ring-2 ring-white ring-offset-2 ring-offset-zinc-900" : ""
                         )}
                       />
                     ))}
@@ -206,11 +224,11 @@ const Page = () => {
                     {themes.map((theme) => (
                       <div
                         key={theme.value}
-                        onClick={() => setData(prev => ({ ...prev, selectedTheme: theme }))}
+                        onClick={() => handleThemeSelect(theme)}
                         className={cn(
                           "p-4 rounded-lg cursor-pointer transition-all duration-200",
                           theme.preview,
-                          data.selectedTheme.value === theme.value ? "ring-2 ring-white/20" : "ring-1 ring-white/10"
+                          watch('selectedTheme').value === theme.value ? "ring-2 ring-white/20" : "ring-1 ring-white/10"
                         )}
                       >
                         <span className="text-sm font-medium">{theme.name}</span>
@@ -223,9 +241,9 @@ const Page = () => {
                 <div className="space-y-4 w-full">
                   <Label className="text-zinc-300">Profile Photo</Label>
                   <div className="flex items-center gap-4">
-                    {data.previewImage && (
+                    {watch('profilePhoto') && (
                       <div className="size-16 rounded-full overflow-hidden">
-                        <img src={data.previewImage} alt="Preview" className="w-full h-full object-cover" />
+                        <img src={watch('profilePhoto')} alt="Preview" className="w-full h-full object-cover" />
                       </div>
                     )}
                     <Input
@@ -248,8 +266,8 @@ const Page = () => {
                     onClick={() => setStep(3)}
                     className={cn(
                       "text-white transition-all duration-200",
-                      data.selectedColor.primary,
-                      data.selectedColor.hover
+                      watch('selectedColor').primary,
+                      watch('selectedColor').hover
                     )}
                   >
                     Continue
@@ -269,62 +287,46 @@ const Page = () => {
                   <div className="space-y-2">
                     <Label className="text-zinc-300">first name</Label>
                     <Input
+                      {...register("firstName")}
                       className="w-full p-3 rounded-md bg-white/5 border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                      value={data.firstName}
                       type="text"
-                      onChange={(e) =>
-                        setData({
-                          ...data,
-                          firstName: e.target.value,
-                        })
-                      }
+                      placeholder="John"
                     />
-                    {/* {data.firstName} */}
+                    {errors.firstName && (
+                      <span className="text-sm text-red-500">{errors.firstName.message}</span>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label className="text-zinc-300">Last name</Label>
                     <Input
+                      {...register("lastName")}
                       className="w-full p-3 rounded-md bg-white/5 border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                      value={data.lastName}
                       type="text"
-                      onChange={(e) =>
-                        setData({
-                          ...data,
-                          lastName: e.target.value,
-                        })
-                      }
+                      placeholder="Doe"
                     />
-                    {/* {data.lastName} */}
+                    {errors.lastName && (
+                      <span className="text-sm text-red-500">{errors.lastName.message}</span>
+                    )}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label className="text-zinc-300">Username</Label>
                   <Input
+                    {...register("username")}
                     className="w-full p-3 rounded-md bg-white/5 border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                    value={data.username}
                     type="text"
-                    onChange={(e) =>
-                      setData({
-                        ...data,
-                        username: e.target.value,
-                      })
-                    }
+                    placeholder="johndoey"
                   />
-                  {/* {data.username} */}
+                  {errors.username && (
+                    <span className="text-sm text-red-500">{errors.username.message}</span>
+                  )}
                   <div className="space-y-2 mb-4">
                     <Label className="text-zinc-300">Profile photo</Label>
                     <Input
                       className="w-full p-3 rounded-md placeholder:text-white bg-white/5 border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                      // value={data.profilePhoto}
                       type="file"
-                      // onChange={(e) =>
-                      //   setData({
-                      //     ...data,
-                      //     profilePhoto: e.target.value,
-                      //   })
-                      // }
+                      onChange={handleFileChange}
                     />
-                    {/* {data.profilePhoto} */}
                   </div>
                   <div className="space-y-2  mt-6">
                     <Label className="text-zinc-300">
@@ -359,7 +361,10 @@ const Page = () => {
                   >
                     Back
                   </Button>
-                  <Button className="bg-blue-600 hover:bg-blue-700 transition-colors text-zinc-100 duration-300">
+                  <Button 
+                    onClick={handleSubmit(onSubmit)}
+                    className="bg-blue-600 hover:bg-blue-700 transition-colors text-zinc-100 duration-300"
+                  >
                     Go to dashboard
                   </Button>
                 </div>
@@ -371,21 +376,21 @@ const Page = () => {
         {/* Right Preview Panel */}
         <div className={cn(
           "hidden lg:flex h-full w-[50%] flex-col",
-          data.selectedTheme.preview
+          watch('selectedTheme').preview
         )}>
           {step === 1 ? (
             // Profile Preview for Step 1
             <div className="p-8 h-full">
               <div className="flex items-start gap-6 p-6 rounded-lg bg-white/5">
-                {data.previewImage ? (
-                  <img src={data.previewImage} alt="Profile" className="size-24 rounded-full object-cover border-2 border-white/10" />
+                {watch('profilePhoto') ? (
+                  <img src={watch('profilePhoto')} alt="Profile" className="size-24 rounded-full object-cover border-2 border-white/10" />
                 ) : (
                   <div className="size-24 rounded-full bg-white/10 border-2 border-white/10" />
                 )}
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-2xl font-medium">{data.firstName ? `${data.firstName} ${data.lastName}` : 'Your Name'}</h3>
-                    <p className="text-lg text-white/60">{data.username ? `@${data.username}` : '@username'}</p>
+                    <h3 className="text-2xl font-medium">{watch('firstName') ? `${watch('firstName')} ${watch('lastName')}` : 'Your Name'}</h3>
+                    <p className="text-lg text-white/60">{watch('username') ? `@${watch('username')}` : '@username'}</p>
                   </div>
                   <div className="flex gap-2">
                     <Badge className="bg-white/10 hover:bg-white/20">Developer</Badge>
@@ -406,7 +411,7 @@ const Page = () => {
                       key={i}
                       className={cn(
                         "size-10 rounded-lg flex items-center justify-center transition-colors",
-                        i === 0 ? data.selectedColor.primary : "bg-white/5 hover:bg-white/10"
+                        i === 0 ? watch('selectedColor').primary : "bg-white/5 hover:bg-white/10"
                       )}
                     >
                       <Icon className="size-5" />
@@ -434,8 +439,8 @@ const Page = () => {
                         key={i}
                         className={cn(
                           "h-24 rounded-lg p-4",
-                          i === 1 ? data.selectedColor.primary : "bg-white/5"
-                        )}
+                          i === 1 ? watch('selectedColor').primary : "bg-white/5"
+                        )} 
                       >
                         <div className="space-y-2">
                           <div className="h-2 w-12 rounded bg-white/20" />

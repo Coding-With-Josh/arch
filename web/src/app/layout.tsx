@@ -27,11 +27,26 @@ export const metadata: Metadata = {
   description: "Build. Ship. Scale.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
+    try {
+      const response = await fetch('/api/auth/sync', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to sync user');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error syncing user:', error);
+    }
   return (
     <ClerkProvider>
         {/* <ThemeProvider> */}

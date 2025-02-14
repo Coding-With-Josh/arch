@@ -30,43 +30,8 @@ const iconMap: Record<Activity['type'], LucideIcon> = {
   package: Code2
 }
 
-const activities: Activity[] = [
-  {
-    id: "1",
-    user: {
-      name: "Alex Johnson",
-      avatar: "AJ"
-    },
-    type: "commit",
-    project: "Frontend",
-    description: "Updated dashboard components",
-    timestamp: "2 minutes ago"
-  },
-  {
-    id: "2",
-    user: {
-      name: "Sarah Miller",
-      avatar: "SM"
-    },
-    type: "deploy",
-    project: "API",
-    description: "Deployed v2.1.0 to production",
-    timestamp: "1 hour ago"
-  },
-  {
-    id: "3",
-    user: {
-      name: "David Chen",
-      avatar: "DC"
-    },
-    type: "pr",
-    project: "Backend",
-    description: "Added new authentication endpoints",
-    timestamp: "3 hours ago"
-  }
-]
 
-export default function ActivityList({ className }: { className?: string }) {
+export default function ActivityList({ className, activities }: { className?: string, activities: Activity[]}) {
   return (
     <div className={cn(
       "relative max-h-[500px] overflow-y-auto",

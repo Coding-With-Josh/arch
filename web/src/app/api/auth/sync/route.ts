@@ -31,7 +31,7 @@ export async function POST() {
         authProviderId: user.externalAccounts[0].id,
         walletAddress: user.primaryWeb3WalletId,
         role: Role.USER,
-        hasCompletedOnboarding: false,
+        onboardingCompleted: false,
         avatarUrl: user.imageUrl,
         username: user.username,
         name: user.fullName,
@@ -40,6 +40,7 @@ export async function POST() {
         ownedOrganizations: undefined,
         onboardingStep: 0,
         walletProviderId: "",
+        
       }
     })
   }

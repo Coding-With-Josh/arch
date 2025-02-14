@@ -39,28 +39,34 @@ model WalletProvider {
 }
 
 model User {
-  id               String         @id @default(uuid())
-  email            String         @unique
-  name             String?
-  username         String?
-  password         String?
-  role             Role           @default(USER)
-  isActive         Boolean        @default(false)
-  isVerified       Boolean        @default(false)
-  authProviderId   String         @unique
-  walletProviderId String         @unique
-  authProvider     AuthProvider   @relation(fields: [authProviderId], references: [id])
-  walletProvider   WalletProvider @relation(fields: [walletProviderId], references: [id])
-  walletAddress    String?        @unique
-  avatarUrl        String?
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+  id                  String         @id @default(uuid())
+  email               String         @unique
+  name                String?
+  username            String?
+  password            String?
+  profilePhoto        String?
+  themePreference     String?        @default("dark")
+  accentColor         String?        @default("blue")
+  onboardingCompleted Boolean        @default(false)
+  role                Role           @default(USER)
+  isActive            Boolean        @default(false)
+  isVerified          Boolean        @default(false)
+  authProviderId      String         @unique
+  walletProviderId    String         @unique
+  authProvider        AuthProvider   @relation(fields: [authProviderId], references: [id])
+  walletProvider      WalletProvider @relation(fields: [walletProviderId], references: [id])
+  walletAddress       String?        @unique  
+  avatarUrl           String?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  lastUrl             String?
+  lastLogin           DateTime?
+  lastActive          DateTime?
 
   organizations      UserOrganization[]
   ownedOrganizations Organization[]     @relation("OwnedOrganizations")
   activities         Activity[]
-  hasCompletedOnboarding Boolean @default(false)
-  onboardingStep         Int     @default(0)
+  onboardingStep     Int                @default(0)
 }
 
 model Organization {

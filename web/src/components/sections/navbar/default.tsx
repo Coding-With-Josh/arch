@@ -1,3 +1,4 @@
+import { Profile } from "../../custom/profile";
 import Navigation from "../../ui/navigation";
 import { Button } from "../../ui/button";
 import {
@@ -6,78 +7,67 @@ import {
   NavbarRight,
 } from "../../ui/navbar";
 import { Sheet, SheetContent, SheetTrigger } from "../../ui/sheet";
-import { Menu } from "lucide-react";
-import { currentUser } from "@clerk/nextjs/server";
+import { BarChart3, Cpu, Menu } from "lucide-react";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { CreateOrganization, UserButton } from "@clerk/nextjs";
+import { MainNav } from "@/components/custom/navbar"
 
 export default async function Navbar() {
   const user = await currentUser();
+  const authMethod = await auth();
+
+  // Transform user data into a plain object
+  const userData = user
+    ? {
+        username: user.username || user.firstName || "User",
+        email: user.emailAddresses[0]?.emailAddress || "",
+        imageUrl: user.imageUrl || "",
+      }
+    : null;
+
   return (
-    <header className="sticky top-0 z-50 -mb-4 px-12 py-2 w-full items-center bg-transparent border-b border-zinc-900 backdrop-blur-md">
-      <div className="fade-bottom absolute left-0 h-24 w-full p-12"></div>
-      <div className="relative mx-auto max-w-container">
-        <NavbarComponent>
-          <NavbarLeft>
-            <a
-              href="/"
-              className="flex items-center gap-2 text-xl font-bold text-white"
-            >
-              Arch
+    <header className="fixed top-0 z-50 w-full border-b border-zinc-800 bg-zinc-950/60 backdrop-blur-lg">
+      <div className="container mx-auto flex h-16 items-center px-4">
+        <div className="flex items-center gap-8">
+          <a href="/" className="flex items-center gap-2">
+            <Cpu className="h-6 w-6 text-blue-500" />
+            <span className="text-lg font-bold text-zinc-100">Arch</span>
+          </a>
+          <MainNav />
+        </div>
+        <div className="ml-auto flex items-center gap-4">
+          {/* <Button 
+            variant="ghost"
+            size="sm"
+            className="hidden text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 sm:flex"
+            asChild
+          >
+            <a href="/dashboard">
+              <BarChart3 className="mr-2 h-4 w-4" />
+              Dashboard
             </a>
-          </NavbarLeft>
-          <Navigation />
-          <NavbarRight>
-            {user ? (
-              <>
-                <UserButton />
-              </>
-            ) : (
-              <>
-                <a
-                  href="/sign-in"
-                  className="hidden text-sm md:block text-white"
-                >
-                  Sign in
-                </a>
-                <Button variant="default" asChild>
-                  <a href="/sign-up">Get Started</a>
-                </Button>
-              </>
-            )}
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="shrink-0 md:hidden"
-                >
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">Toggle navigation menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right">
-                <nav className="grid gap-6 text-lg font-medium">
-                  <a
-                    href="/"
-                    className="flex items-center gap-2 text-xl font-bold text-white"
-                  >
-                    <span>Launch UI</span>
-                  </a>
-                  <a href="/" className="text-white hover:text-foreground">
-                    Getting Started
-                  </a>
-                  <a href="/" className="text-white hover:text-foreground">
-                    Components
-                  </a>
-                  <a href="/" className="text-white hover:text-foreground">
-                    Documentation
-                  </a>
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </NavbarRight>
-        </NavbarComponent>
+          </Button> */}
+          {userData ? (
+            <Profile userData={userData} />
+          ) : (
+            <div className="flex items-center gap-4">
+              <Button 
+                variant="ghost" 
+                className="text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800"
+                asChild
+              >
+                <a href="/sign-in">Sign in</a>
+              </Button>
+              <Button 
+                className="bg-blue-600 text-white hover:bg-blue-700"
+                asChild
+              >
+                <a href="/sign-up">Get Started</a>
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
-  );
+  )
 }

@@ -1,8 +1,7 @@
-import Content from "@/components/dashboard/content";
-
-
 export default function Dashboard() {
     return (
-        <Content/>
+       <div className="text-white">
+        <h2 className="text-xl font-bold text-white">Dashboard</h2>
+       </div>
     );
-}
+}   
