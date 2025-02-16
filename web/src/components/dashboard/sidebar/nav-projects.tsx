@@ -25,15 +25,17 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
-export function NavProjects({
-  projects,
-}: {
-  projects: {
-    name: string
-    url: string
-    icon: LucideIcon
-  }[]
-}) {
+interface NavProjectsProps {
+    id: string | null;
+    name: string | null;
+    icon: LucideIcon;
+    slug: string | null;
+    type: 'WEB2' | 'WEB3' | 'API';
+    repository: string | null;
+    deploymentUrl: string | null;
+}
+
+export function NavProjects({ projects }: { projects: NavProjectsProps[] }) {
   const { isMobile } = useSidebar()
 
   return (
@@ -43,7 +45,7 @@ export function NavProjects({
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
+              <a href={`/dashboard/projects/${item.slug}`}>
                 <item.icon className="h-4 w-4"/>
                 <span>{item.name}</span>
               </a>

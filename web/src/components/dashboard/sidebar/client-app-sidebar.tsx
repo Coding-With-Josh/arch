@@ -8,6 +8,7 @@ import {
   Command,
   Frame,
   GalleryVerticalEnd,
+  LucideIcon,
   Map,
   PieChart,
   Settings2,
@@ -27,18 +28,40 @@ import {
 } from "@/components/ui/sidebar"
 import { SidebarOptInForm } from "./sidebar-opt-in-form"
 
-
-export function ClientAppSidebar({
-  data,
-  ...props
-}: {
+interface ClientAppSidebarProps {
   data: {
-    teams: any[]
-    projects: any[]
-    user: any
+    user: {
+      id: string;
+      name: string | null;
+      email: string;
+      profilePhoto: string | null;
+      role: 'ADMIN' | 'USER' | 'TESTER' | 'DEVELOPER';
+      isActive: boolean;
+      isVerified: boolean;
+      avatarUrl: string | null;
+    };
+    teams: Array<{
+      id: string | null;
+      name: string | null;
+      slug: string | null;
+      planType: 'FREE' | 'GOLD' | 'SILVER' | 'TITANIUM' | 'ENTERPRISE';
+      logo: string | null;
+      avatarUrl: string | null;
+    }>;
+    projects: Array<{
+      id: string | null;
+      name: string | null;
+      slug: string | null;
+      icon: LucideIcon;
+      type: 'WEB2' | 'WEB3' | 'API';
+      repository: string | null;
+      deploymentUrl: string | null;
+    }>;
   }
-  props?: React.ComponentProps<typeof Sidebar>
-}) {
+}
+
+export function ClientAppSidebar({ data, ...props }: ClientAppSidebarProps & React.HTMLAttributes<HTMLDivElement>) {
+
   return (
     <Sidebar variant="floating" {...props} className="bg-zinc-950 scrollbar-custom rounded-xl">
       <SidebarHeader>

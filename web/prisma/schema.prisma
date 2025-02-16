@@ -29,15 +29,6 @@ model AuthProvider {
   updatedAt DateTime         @updatedAt
 }
 
-model WalletProvider {
-  id             String             @id @default(uuid())
-  type           WalletProviderType
-  users          User[]
-  connectedAt    DateTime           @default(now())
-  disconnectedAt DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-}
-
 model User {
   id                  String         @id @default(uuid())
   email               String         @unique
@@ -51,11 +42,11 @@ model User {
   role                Role           @default(USER)
   isActive            Boolean        @default(false)
   isVerified          Boolean        @default(false)
-  authProviderId      String         @unique
-  walletProviderId    String         @unique
-  authProvider        AuthProvider   @relation(fields: [authProviderId], references: [id])
+  authProviderId      String?
+  walletProviderId    String
+  authProvider        AuthProvider?  @relation(fields: [authProviderId], references: [id])
   walletProvider      WalletProvider @relation(fields: [walletProviderId], references: [id])
-  walletAddress       String?        @unique  
+  walletAddress       String?
   avatarUrl           String?
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @updatedAt
@@ -69,11 +60,23 @@ model User {
   onboardingStep     Int                @default(0)
 }
 
+model WalletProvider {
+  id             String   @id @default(cuid())
+  name           String   @unique
+  displayName    String
+  isActive       Boolean  @default(true)
+  users          User[]
+  connectedAt    DateTime @default(now())
+  disconnectedAt DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
 model Organization {
   id               String   @id @default(uuid())
   name             String
   slug             String   @unique
   ownerId          String
+  logo             String?
   planType         PlanType @default(FREE)
   stripePriceId    String?
   stripeCustomerId String?
@@ -132,6 +135,7 @@ model Project {
   id             String      @id @default(uuid())
   name           String
   slug           String      @unique
+  icon           String?
   organizationId String
   type           ProjectType
   repository     String?
