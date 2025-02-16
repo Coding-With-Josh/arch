@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { ChevronsUpDown, Plus } from "lucide-react"
+import { Building2, ChevronDown, Plus } from "lucide-react"
 
 import {
   DropdownMenu,
@@ -19,10 +19,28 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
+interface Team {
+  id: string | null
+  name: string | null
+  planType: string
+  slug: string | null
+  avatarUrl: string | null
+}
 
-export function TeamSwitcher({ teams }: { teams: any[] }) {
+interface TeamSwitcherProps {
+  teams: Team[]
+}
+
+export function TeamSwitcher({ teams }: TeamSwitcherProps) {
   const { isMobile } = useSidebar()
-  const [activeTeam, setActiveTeam] = React.useState(teams[0])
+  const [open, setOpen] = React.useState(false)
+  const [activeTeam, setActiveTeam] = React.useState<Team>(teams[0] || {
+    id: null,
+    name: "No Team",
+    planType: "FREE",
+    slug: null,
+    avatarUrl: null
+  })
 
   return (
     <SidebarMenu>
@@ -34,13 +52,13 @@ export function TeamSwitcher({ teams }: { teams: any[] }) {
               className="data-[state=open]:bg-zinc-800 data-[state=open]:text-zinc-100"
             >
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-zinc-800 border border-zinc-700">
-                <activeTeam.logo className="size-4 text-zinc-400" />
+                <Building2 className="size-4 text-zinc-400" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium text-zinc-100">{activeTeam.name}</span>
-                <span className="truncate text-xs text-zinc-400">{activeTeam.plan}</span>
+                <span className="truncate font-medium text-zinc-100">{activeTeam?.name || "Select Team"}</span>
+                <span className="truncate text-xs text-zinc-400">{activeTeam?.planType?.toLowerCase() || "No plan"}</span>
               </div>
-              <ChevronsUpDown className="ml-auto text-zinc-400 h-4 w-4" />
+              <ChevronDown className="ml-auto text-zinc-400 h-4 w-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -54,12 +72,12 @@ export function TeamSwitcher({ teams }: { teams: any[] }) {
             </DropdownMenuLabel>
             {teams.map((team, index) => (
               <DropdownMenuItem
-                key={team.name}
+                key={team.id}
                 onClick={() => setActiveTeam(team)}
                 className="gap-2 p-2 text-white"
               >
                 <div className="flex size-6 items-center justify-center rounded-sm border border-[#1F1F23]">
-                  <team.logo className="size-4 shrink-0" />
+                  <Building2 className="size-4 shrink-0" />
                 </div>
                 {team.name}
                 <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>

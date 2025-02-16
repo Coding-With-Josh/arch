@@ -43,9 +43,8 @@ interface ClientAppSidebarProps {
     teams: Array<{
       id: string | null;
       name: string | null;
-      slug: string | null;
       planType: 'FREE' | 'GOLD' | 'SILVER' | 'TITANIUM' | 'ENTERPRISE';
-      logo: string | null;
+      slug: string | null;
       avatarUrl: string | null;
     }>;
     projects: Array<{
