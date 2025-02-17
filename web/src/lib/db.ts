@@ -12,8 +12,6 @@ export async function updateUserOnboarding(userId: string, data: any) {
   return await prisma.user.update({
     where: { id: userId },
     data: {
-      firstName: data.firstName,
-      lastName: data.lastName,
       username: data.username,
       profilePhoto: data.previewImage,
       themePreference: data.selectedTheme.value,

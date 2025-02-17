@@ -1,20 +1,21 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useCollapsibleState } from "@/hooks/use-collapsible-state"
-import type { ReactNode } from "react"
-import { ClientAppSidebar } from "@/components/dashboard/sidebar/client-app-sidebar"
-import { Breadcrumb } from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
+import { useCallback, useEffect, useState } from "react";
+import { useCollapsibleState } from "@/hooks/use-collapsible-state";
+import type { ReactNode } from "react";
+import { ClientAppSidebar } from "@/components/dashboard/sidebar/client-app-sidebar";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
-import { WalletStatus } from "@/components/ui/wallet-status"
-import { Button } from "@/components/ui/button"
-import { Bell, LucideIcon } from "lucide-react"
-import { PlanType, ProjectType } from "@prisma/client"
+} from "@/components/ui/sidebar";
+import { WalletStatus } from "@/components/ui/wallet-status";
+import { Button } from "@/components/ui/button";
+import { Bell, LucideIcon } from "lucide-react";
+import { PlanType, ProjectType } from "@prisma/client";
+import { CommandCenter } from "@/components/dashboard/command";
 
 interface DashboardClientProps {
   children: ReactNode;
@@ -47,19 +48,44 @@ interface DashboardClientProps {
   }>;
 }
 
-export function DashboardClient({ children, user, teams, projects }: DashboardClientProps) {
-  const [isCollapsed, setIsCollapsed] = useCollapsibleState('sidebar-state', false)
-  const [mounted, setMounted] = useState(false)
+export function DashboardClient({
+  children,
+  user,
+  teams,
+  projects,
+}: DashboardClientProps) {
+  const [isCollapsed, setIsCollapsed] = useCollapsibleState(
+    "sidebar-state",
+    false
+  );
+  const [mounted, setMounted] = useState(false);
+  const [isCommandOpen, setIsCommandOpen] = useState(false);
+
+  const toggleCommandCenter = useCallback(() => {
+    setIsCommandOpen((open) => !open);
+  }, [setIsCommandOpen]);
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+        toggleCommandCenter();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [toggleCommandCenter]);
 
   if (!mounted) {
-    return null
+    return null;
   }
 
   return (
+    <>
+    {isCommandOpen && <CommandCenter/>}
+
     <SidebarProvider className="bg-zinc-950 scrollbar-custom">
       <ClientAppSidebar data={{ user, teams, projects }} />
       <SidebarInset className="m-2 rounded-xl border border-[#1F1F23] scrollbar-custom">
@@ -76,12 +102,11 @@ export function DashboardClient({ children, user, teams, projects }: DashboardCl
             <WalletStatus />
           </div>
         </header>
-        <main className="flex-1 overflow-auto scrollbar-custom p-6">  
-          <div className="h-full">
-            {children}
-          </div>
+        <main className="flex-1 overflow-auto scrollbar-custom p-6">
+          <div className="h-full">{children}</div>
         </main>
       </SidebarInset>
     </SidebarProvider>
-  )
+    </>
+  );
 }
