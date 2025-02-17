@@ -77,7 +77,7 @@ export function DashboardClient({ children, user, teams, projects }: DashboardCl
           </div>
         </header>
         <main className="flex-1 overflow-auto scrollbar-custom p-6">  
-          <div className="">
+          <div className="h-full">
             {children}
           </div>
         </main>
