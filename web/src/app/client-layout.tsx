@@ -4,15 +4,16 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { syncUser } from "@/lib/sync";
 import { orgSync } from "@/lib/orgSync";
-import { useUser } from "@clerk/nextjs";
 
 export default function ClientLayout({
   children,
+clerkOrgs
+
 }: Readonly<{
   children: React.ReactNode;
+  clerkOrgs: any
 }>) {
   const router = useRouter();
-  const clerkOrgs = useUser()
 
 
   useEffect(() => {
