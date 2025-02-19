@@ -3,15 +3,11 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { syncUser } from "@/lib/sync";
-import { orgSync } from "@/lib/orgSync";
 
 export default function ClientLayout({
   children,
-clerkOrgs
-
 }: Readonly<{
   children: React.ReactNode;
-  clerkOrgs: any
 }>) {
   const router = useRouter();
 
@@ -20,7 +16,6 @@ clerkOrgs
     const handleSync = async () => {
       try {
         await syncUser();
-        await orgSync(clerkOrgs)
       } catch (error) {
         if (error instanceof Error) {
           console.error('Sync error:', error.message);
@@ -31,7 +26,7 @@ clerkOrgs
     };
 
     handleSync();
-  }, [router, clerkOrgs]);
+  }, [router]);
 
   return <>{children}</>;
 }

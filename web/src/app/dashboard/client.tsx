@@ -84,29 +84,37 @@ export function DashboardClient({
 
   return (
     <>
-    {isCommandOpen && <CommandCenter/>}
+      {isCommandOpen && <CommandCenter />}
 
-    <SidebarProvider className="bg-zinc-950 scrollbar-custom">
-      <ClientAppSidebar data={{ user, teams, projects }} />
-      <SidebarInset className="m-2 rounded-xl border border-[#1F1F23] scrollbar-custom">
-        <header className="flex h-16 shrink-0 items-center gap-2 px-4 bg-zinc-900/50 rounded-t-xl border-b border-[#1F1F23]">
-          <SidebarTrigger className="text-zinc-400 hover:text-zinc-100" />
-          <Separator orientation="vertical" className="mr-2 h-4 bg-[#1F1F23]" />
-          <div className="flex-1 overflow-x-auto scrollbar-none">
-            <Breadcrumb className="text-zinc-400" />
-          </div>
-          <div className="flex items-center gap-3">
-            <Button className="h-8 w-8 p-1 rounded-lg bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:text-zinc-100">
-              <Bell className="size-4 text-zinc-500" />
-            </Button>
-            <WalletStatus />
-          </div>
-        </header>
-        <main className="flex-1 overflow-auto scrollbar-custom p-6">
-          <div className="h-full">{children}</div>
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
+      {window.location.pathname.endsWith("/studio/editor") ? (
+        
+        <>{children}</>
+      ) : (
+        <SidebarProvider className="bg-zinc-950 scrollbar-custom">
+          <ClientAppSidebar data={{ user, teams, projects }} />
+          <SidebarInset className="m-2 rounded-xl border border-[#1F1F23] scrollbar-custom">
+            <header className="flex h-16 shrink-0 items-center gap-2 px-4 bg-zinc-900/50 rounded-t-xl border-b border-[#1F1F23]">
+              <SidebarTrigger className="text-zinc-400 hover:text-zinc-100" />
+              <Separator
+                orientation="vertical"
+                className="mr-2 h-4 bg-[#1F1F23]"
+              />
+              <div className="flex-1 overflow-x-auto scrollbar-none">
+                <Breadcrumb className="text-zinc-400" />
+              </div>
+              <div className="flex items-center gap-3">
+                <Button className="h-8 w-8 p-1 rounded-lg bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:text-zinc-100">
+                  <Bell className="size-4 text-zinc-500" />
+                </Button>
+                <WalletStatus />
+              </div>
+            </header>
+            <main className="flex-1 overflow-auto scrollbar-custom p-6">
+              <div className="h-full">{children}</div>
+            </main>
+          </SidebarInset>
+        </SidebarProvider>
+      )}
     </>
   );
 }

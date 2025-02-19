@@ -24,7 +24,7 @@ export function WalletStatus() {
             className="flex items-center gap-2"
           >
             <Wallet className="h-4 w-4 text-zinc-400 group-hover:text-zinc-100 transition-colors" />
-            <span className="text-xs font-medium">0.00 ETH</span>
+            <span className="text-xs font-medium">5.37 SOL</span>
             <motion.span 
               className="size-2 rounded-full bg-green-500"
               animate={{ 
