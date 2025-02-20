@@ -8,7 +8,7 @@ interface LayoutProps {
 
 export default async function DashboardLayout({ children }: LayoutProps) {
   return (
-    <div>
+    <div className="w-screen min-h-screen">
       <Suspense fallback={<MainContentLoader />}>{children}</Suspense>
     </div>
   );
