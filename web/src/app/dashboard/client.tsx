@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useCollapsibleState } from "@/hooks/use-collapsible-state";
 import type { ReactNode } from "react";
 import { ClientAppSidebar } from "@/components/dashboard/sidebar/client-app-sidebar";
@@ -15,7 +15,6 @@ import { WalletStatus } from "@/components/ui/wallet-status";
 import { Button } from "@/components/ui/button";
 import { Bell, LucideIcon } from "lucide-react";
 import { PlanType, ProjectType } from "@prisma/client";
-import { CommandCenter } from "@/components/dashboard/command";
 
 interface DashboardClientProps {
   children: ReactNode;
@@ -59,24 +58,7 @@ export function DashboardClient({
     false
   );
   const [mounted, setMounted] = useState(false);
-  const [isCommandOpen, setIsCommandOpen] = useState(false);
 
-  const toggleCommandCenter = useCallback(() => {
-    setIsCommandOpen((open) => !open);
-  }, [setIsCommandOpen]);
-
-  useEffect(() => {
-    setMounted(true);
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
-        event.preventDefault();
-        toggleCommandCenter();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [toggleCommandCenter]);
 
   if (!mounted) {
     return null;
@@ -84,7 +66,6 @@ export function DashboardClient({
 
   return (
     <>
-      {isCommandOpen && <CommandCenter />}
 
       {window.location.pathname.endsWith("/studio/editor") ? (
         
