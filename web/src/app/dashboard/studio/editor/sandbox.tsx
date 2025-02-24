@@ -1,71 +1,79 @@
-"use client"
-
-import { Suspense } from 'react'
 import {
+  useActiveCode,
+  useSandpack,
   SandpackProvider,
   SandpackLayout,
   SandpackCodeEditor,
   SandpackPreview,
+  SandpackThemeProvider,
+  SandpackConsole,
   SandpackFileExplorer
-} from "@codesandbox/sandpack-react"
+} from "@codesandbox/sandpack-react";
+import { javascript } from "@codemirror/lang-javascript";
 
-function SandboxContent() {
-  return (
-    <SandpackLayout>
-      <SandpackFileExplorer />
-      <SandpackCodeEditor
-        showInlineErrors
-        showLineNumbers
-        showTabs
-        showRunButton
-        className="h-full w-full"
-        closableTabs
-      />
-      <SandpackPreview 
-        showNavigator
-        showOpenNewtab
-      />
-    </SandpackLayout>
-  )
-}
 
-export default function Sandbox() {
+const Sandbox = () => {
   return (
-    <Suspense fallback={
-      <div className="h-screen w-full flex items-center justify-center bg-zinc-950">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white" />
-      </div>
-    }>
-      <SandpackProvider
-        theme="dark"
-        template="react"
-        options={{
-          recompileMode: "delayed",
-          recompileDelay: 500,
-        }}
-        files={{
-          "/App.tsx": {
-            code: `export default function App() {
-  return (
-    <div className="App">
-      <h1>Welcome to Arch Studio</h1>
-      <p>Start editing to see some magic happen!</p>
-    </div>
-  );
-}`,
-          },
-          "/styles.css": {
-            code: `body {
+    <SandpackProvider
+      template="react"
+      theme={"auto"}
+      files={{
+        "/src/index.js": {
+          code: `import React from "react";
+import ReactDOM from "react-dom";
+import "./styles.css";
+`,
+        },
+        "/src/App.js": {
+          code: `import React from "react";
+import "./styles.css";
+`,
+        },
+        "/src/styles.css": {
+          code: `body {
+  font-family: sans-serif;
   margin: 0;
-  padding: 1rem;
-  background: #1a1a1a;
-  color: white;
-}`,
-          },
-        }}
-      >
-        <SandboxContent />
-      </SandpackProvider>
-    </Suspense>
-  )
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
 }
+`,
+        },
+      }}
+      >
+      <SandpackLayout>
+        <SandpackFileExplorer/>
+
+        <SandpackCodeEditor
+          showInlineErrors
+          showLineNumbers
+          showTabs
+          showRunButton
+          className="h-full w-full"
+          closableTabs
+          additionalLanguages={[
+            {
+              name: "javascript",
+              extensions: [".js"],
+              language: javascript(),
+            },
+          ]}
+        />
+        <SandpackPreview 
+          showNavigator
+          showOpenNewtab
+        />
+        <SandpackConsole
+          showHeader
+          standalone
+          showSetupProgress
+        />
+      </SandpackLayout>
+    </SandpackProvider>
+  );
+};
+
+export default Sandbox;
