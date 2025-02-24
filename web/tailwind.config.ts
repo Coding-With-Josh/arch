@@ -67,14 +67,14 @@ const config: Config = {
             foreground: "#FFFFFF",
           },
         },
-        zinc: {
-          750: "#2f2f3d",
-          850: "#1c1c24",
-          950: "#09090b",
-        },
       },
       borderRadius: {
         lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      keyframes: {
+        'caret-blink': {
           '0%,70%,100%': { opacity: '1' },
           '20%,50%': { opacity: '0' },
         },

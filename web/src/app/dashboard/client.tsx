@@ -15,6 +15,8 @@ import { WalletStatus } from "@/components/ui/wallet-status";
 import { Button } from "@/components/ui/button";
 import { Bell, LucideIcon } from "lucide-react";
 import { PlanType, ProjectType } from "@prisma/client";
+import { CommandCenter } from "@/components/dashboard/command"
+
 
 interface DashboardClientProps {
   children: ReactNode;
@@ -69,9 +71,13 @@ export function DashboardClient({
 
       {window.location.pathname.endsWith("/studio/editor") ? (
         
-        <>{children}</>
+        <>
+          <CommandCenter/>
+        {children}</>
       ) : (
         <SidebarProvider className="bg-zinc-950 scrollbar-custom">
+                  <CommandCenter/>
+
           <ClientAppSidebar data={{ user, teams, projects }} />
           <SidebarInset className="m-2 rounded-xl border border-[#1F1F23] scrollbar-custom">
             <header className="flex h-16 shrink-0 items-center gap-2 px-4 bg-zinc-900/50 rounded-t-xl border-b border-[#1F1F23]">
