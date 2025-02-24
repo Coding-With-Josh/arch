@@ -2,6 +2,7 @@ import { auth, createClerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Role } from "@prisma/client";
+import { nanoid } from 'nanoid';
 
 // Initialize the Clerk client
 const clerkClient = createClerkClient({
@@ -19,7 +20,6 @@ export async function POST() {
       );
     }
 
-    // Fetch the user's organization memberships from Clerk
     const membershipsResponse = await clerkClient.users.getOrganizationMembershipList({
       userId,
     });
@@ -36,29 +36,33 @@ export async function POST() {
     // Sync each organization
     for (const membership of memberships) {
       const orgId = membership.organization.id;
-      const orgName = membership.organization.name;
-      const orgSlug = membership.organization.slug;
-      const orgLogo = membership.organization.imageUrl;
+      const orgName = membership.organization.name || 'Untitled Organization';
+      // Generate a unique slug if none exists
+      const orgSlug = membership.organization.slug || `org-${nanoid(10)}`;
+      const orgLogo = membership.organization.imageUrl || null;
 
-      // Check if the organization already exists in the database
+      // Check if the organization already exists
       let existingOrg = await prisma.organization.findUnique({
         where: { id: orgId },
       });
 
       if (!existingOrg) {
-        // Create the organization if it doesn't exist
+        // Create the organization with validated data
         existingOrg = await prisma.organization.create({
           data: {
             id: orgId,
             name: orgName,
             slug: orgSlug,
-            logo: orgLogo,
+            avatarUrl: orgLogo, // Make sure this matches your schema field name
             ownerId: userId,
+            planType: 'FREE', // Add default plan type
+            createdAt: new Date(),
+            updatedAt: new Date(),
           },
         });
       }
 
-      // Check if the user is already associated with the organization
+      // Check existing user-org relationship
       const userOrg = await prisma.userOrganization.findFirst({
         where: {
           userId,
@@ -67,12 +71,12 @@ export async function POST() {
       });
 
       if (!userOrg) {
-        // Associate the user with the organization
         await prisma.userOrganization.create({
           data: {
             userId,
             organizationId: orgId,
-            role: Role.ADMIN, // or whatever role you want to assign
+            role: Role.ADMIN,
+            joinedAt: new Date(),
           },
         });
       }
