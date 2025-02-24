@@ -15,8 +15,8 @@ import { WalletStatus } from "@/components/ui/wallet-status";
 import { Button } from "@/components/ui/button";
 import { Bell, LucideIcon } from "lucide-react";
 import { PlanType, ProjectType } from "@prisma/client";
-import { CommandCenter } from "@/components/dashboard/command"
-
+import { CommandCenter } from "@/components/dashboard/command";
+import { usePathname } from "next/navigation";
 
 interface DashboardClientProps {
   children: ReactNode;
@@ -55,53 +55,53 @@ export function DashboardClient({
   teams,
   projects,
 }: DashboardClientProps) {
+  const pathname = usePathname();
+  const isEditorPage = pathname?.includes("/studio/editor");
+
   const [isCollapsed, setIsCollapsed] = useCollapsibleState(
     "sidebar-state",
     false
   );
   const [mounted, setMounted] = useState(false);
 
-
   if (!mounted) {
     return null;
   }
 
+  if (isEditorPage) {
+    return (
+      <div className="h-screen w-screen overflow-hidden">
+        <CommandCenter />
+        {children}
+      </div>
+    );
+  }
+
   return (
-    <>
-
-      {window.location.pathname.endsWith("/studio/editor") ? (
-        
-        <>
-          <CommandCenter/>
-        {children}</>
-      ) : (
-        <SidebarProvider className="bg-zinc-950 scrollbar-custom">
-                  <CommandCenter/>
-
-          <ClientAppSidebar data={{ user, teams, projects }} />
-          <SidebarInset className="m-2 rounded-xl border border-[#1F1F23] scrollbar-custom">
-            <header className="flex h-16 shrink-0 items-center gap-2 px-4 bg-zinc-900/50 rounded-t-xl border-b border-[#1F1F23]">
-              <SidebarTrigger className="text-zinc-400 hover:text-zinc-100" />
-              <Separator
-                orientation="vertical"
-                className="mr-2 h-4 bg-[#1F1F23]"
-              />
-              <div className="flex-1 overflow-x-auto scrollbar-none">
-                <Breadcrumb className="text-zinc-400" />
-              </div>
-              <div className="flex items-center gap-3">
-                <Button className="h-8 w-8 p-1 rounded-lg bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:text-zinc-100">
-                  <Bell className="size-4 text-zinc-500" />
-                </Button>
-                <WalletStatus />
-              </div>
-            </header>
-            <main className="flex-1 overflow-auto scrollbar-custom p-6">
-              <div className="h-full">{children}</div>
-            </main>
-          </SidebarInset>
-        </SidebarProvider>
-      )}
-    </>
+    <SidebarProvider className="bg-zinc-950 scrollbar-custom">
+      <CommandCenter />
+      <ClientAppSidebar data={{ user, teams, projects }} />
+      <SidebarInset className="m-2 rounded-xl border border-[#1F1F23] scrollbar-custom">
+        <header className="flex h-16 shrink-0 items-center gap-2 px-4 bg-zinc-900/50 rounded-t-xl border-b border-[#1F1F23]">
+          <SidebarTrigger className="text-zinc-400 hover:text-zinc-100" />
+          <Separator
+            orientation="vertical"
+            className="mr-2 h-4 bg-[#1F1F23]"
+          />
+          <div className="flex-1 overflow-x-auto scrollbar-none">
+            <Breadcrumb className="text-zinc-400" />
+          </div>
+          <div className="flex items-center gap-3">
+            <Button className="h-8 w-8 p-1 rounded-lg bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:text-zinc-100">
+              <Bell className="size-4 text-zinc-500" />
+            </Button>
+            <WalletStatus />
+          </div>
+        </header>
+        <main className="flex-1 overflow-auto scrollbar-custom p-6">
+          <div className="h-full">{children}</div>
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
