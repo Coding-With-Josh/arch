@@ -60,9 +60,12 @@ interface ClientAppSidebarProps {
 }
 
 export function ClientAppSidebar({ data, ...props }: ClientAppSidebarProps & React.HTMLAttributes<HTMLDivElement>) {
-
   return (
-    <Sidebar variant="floating" {...props} className="bg-zinc-950 scrollbar-custom rounded-xl">
+    <Sidebar 
+      variant="floating" 
+      {...props} 
+      className="h-screen min-w-[280px] bg-zinc-950 border-r border-zinc-800/50"
+    >
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} /> 
       </SidebarHeader>
@@ -73,6 +76,6 @@ export function ClientAppSidebar({ data, ...props }: ClientAppSidebarProps & Rea
       <SidebarFooter className="px-4 py-2">
         <NavUser user={data.user} />
       </SidebarFooter>
-    </Sidebar>
+    </Sidebar>    
   )
 }

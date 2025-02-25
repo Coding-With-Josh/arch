@@ -26,7 +26,7 @@ export function WalletStatus() {
             <Wallet className="h-4 w-4 text-zinc-400 group-hover:text-zinc-100 transition-colors" />
             <span className="text-xs font-medium">5.37 SOL</span>
             <motion.span 
-              className="size-2 rounded-full bg-green-500"
+              className="size-2 rounded-full bg-green-500 animate-bounce"
               animate={{ 
                 scale: [1, 1.2, 1],
                 opacity: [1, 0.7, 1] 

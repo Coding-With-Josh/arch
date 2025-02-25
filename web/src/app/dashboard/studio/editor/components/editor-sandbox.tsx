@@ -6,21 +6,23 @@ import {
   SandpackCodeEditor,
   SandpackPreview,
   SandpackFileExplorer,
+  SandpackConsole,
 } from "@codesandbox/sandpack-react"
 
 export default function EditorSandbox() {
   return (
-    <div className="h-screen w-full bg-zinc-950">
+    <div className="fixed inset-0 h-screen w-screen overflow-hidden bg-zinc-950">
       <SandpackProvider
+      
         theme="dark"
         template="react"
         options={{
           recompileMode: "delayed",
           recompileDelay: 500,
           classes: {
-            'sp-wrapper': 'h-full border-none bg-transparent',
-            'sp-layout': 'h-full border-none bg-transparent',
-            'sp-stack': 'h-full border-none bg-transparent',
+            'sp-wrapper': 'h-full w-full border-none bg-transparent',
+            'sp-layout': 'h-full w-full border-none bg-transparent',
+            'sp-stack': 'h-full w-full border-none bg-transparent',
           }
         }}
         files={{
@@ -44,24 +46,36 @@ export default function EditorSandbox() {
           },
         }}
       >
-        <SandpackLayout>
-          <SandpackFileExplorer 
-            className="border-r border-zinc-800/50"
-          />
-          <SandpackCodeEditor
-            showInlineErrors
-            showLineNumbers
-            showTabs
-            showRunButton
-            className="h-full flex-1"
-            closableTabs
-          />
-          <SandpackPreview 
-            showNavigator
-            showOpenNewtab
-            className="border-l border-zinc-800/50"
-          />
-        </SandpackLayout>
+        <div className="h-screen w-screen flex flex-col">
+          <SandpackLayout className="flex-1">
+            <div className="h-full flex w-full">
+              <SandpackFileExplorer 
+                className="max-w-[28rem] border-r border-zinc-800/50"
+                
+              />    
+              <div className="flex-1 flex flex-col h-full">
+                <SandpackCodeEditor
+                  showInlineErrors
+                  showLineNumbers
+                  showTabs
+                  showRunButton
+                  className="flex-1 max-w-[50rem]"
+                  closableTabs
+                />
+                {/* <SandpackConsole
+                  showHeader
+                  showSetupProgress
+                  className="h-48 border-t border-zinc-800/50"
+                /> */}
+              </div>
+              <SandpackPreview 
+                showNavigator
+                showOpenNewtab
+                className="border-l border-zinc-800/50"
+              />
+            </div>
+          </SandpackLayout>
+        </div>
       </SandpackProvider>
     </div>
   )
