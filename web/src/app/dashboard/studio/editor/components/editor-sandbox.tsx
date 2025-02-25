@@ -50,7 +50,7 @@ export default function EditorSandbox() {
           <SandpackLayout className="flex-1">
             <div className="h-full flex w-full">
               <SandpackFileExplorer 
-                className="max-w-[28rem] border-r border-zinc-800/50"
+                className="max-w-[22rem] border-r border-zinc-800/50"
                 
               />    
               <div className="flex-1 flex flex-col h-full">
@@ -59,7 +59,7 @@ export default function EditorSandbox() {
                   showLineNumbers
                   showTabs
                   showRunButton
-                  className="flex-1 max-w-[50rem]"
+                  className="flex-1 min-w-[50rem]"
                   closableTabs
                 />
                 {/* <SandpackConsole
