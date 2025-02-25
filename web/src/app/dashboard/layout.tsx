@@ -9,10 +9,12 @@ interface LayoutProps {
 
 export default async function DashboardLayout({ children }: LayoutProps) {
   return (
-    <DashboardShell>
-      <Suspense fallback={<MainContentLoader />}>
-        {children}
-      </Suspense>
-    </DashboardShell>
+    <div className="min-h-screen bg-zinc-950">
+      <DashboardShell>
+        <Suspense fallback={<MainContentLoader />}>
+          {children}
+        </Suspense>
+      </DashboardShell>
+    </div>
   )
 }
