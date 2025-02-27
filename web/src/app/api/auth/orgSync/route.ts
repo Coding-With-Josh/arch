@@ -4,7 +4,6 @@ import { prisma } from "@/lib/prisma";
 import { Role } from "@prisma/client";
 import { nanoid } from 'nanoid';
 
-// Initialize the Clerk client
 const clerkClient = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY,
 });
@@ -12,83 +11,115 @@ const clerkClient = createClerkClient({
 export async function POST() {
   try {
     const { userId } = await auth();
+    if (!userId) return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
 
-    if (!userId) {
-      return new NextResponse(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401 }
-      );
-    }
+    // 1. Get organizations from both Clerk and Prisma
+    const [clerkMemberships, prismaOrgs] = await Promise.all([
+      clerkClient.users.getOrganizationMembershipList({ userId }),
+      prisma.organization.findMany({
+        where: {
+          users: {
+            some: {
+              userId
+            }
+          }
+        },
+        include: {
+          users: true
+        }
+      })
+    ]);
 
-    const membershipsResponse = await clerkClient.users.getOrganizationMembershipList({
-      userId,
-    });
+    // 2. Create sets for easy comparison
+    const clerkOrgIds = new Set(clerkMemberships.data.map(m => m.organization.id));
+    const prismaOrgIds = new Set(prismaOrgs.map(org => org.id));
 
-    const memberships = membershipsResponse.data;
-
-    if (!memberships || memberships.length === 0) {
-      return new NextResponse(
-        JSON.stringify({ error: "No organizations found." }),
-        { status: 404 }
-      );
-    }
-
-    // Sync each organization
-    for (const membership of memberships) {
+    // 3. Sync Clerk -> Prisma (Create missing orgs in Prisma)
+    for (const membership of clerkMemberships.data) {
       const orgId = membership.organization.id;
-      const orgName = membership.organization.name || 'Untitled Organization';
-      // Generate a unique slug if none exists
-      const orgSlug = membership.organization.slug || `org-${nanoid(10)}`;
-      const orgLogo = membership.organization.imageUrl || null;
-
-      // Check if the organization already exists
-      let existingOrg = await prisma.organization.findUnique({
-        where: { id: orgId },
-      });
-
-      if (!existingOrg) {
-        // Create the organization with validated data
-        existingOrg = await prisma.organization.create({
+      
+      if (!prismaOrgIds.has(orgId)) {
+        // Create new org in Prisma
+        await prisma.organization.create({
           data: {
             id: orgId,
-            name: orgName,
-            slug: orgSlug,
-            avatarUrl: orgLogo, // Make sure this matches your schema field name
+            name: membership.organization.name || 'Untitled Organization',
+            slug: membership.organization.slug || `org-${nanoid(10)}`,
+            avatarUrl: membership.organization.imageUrl,
             ownerId: userId,
-            planType: 'FREE', // Add default plan type
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        });
-      }
-
-      // Check existing user-org relationship
-      const userOrg = await prisma.userOrganization.findFirst({
-        where: {
-          userId,
-          organizationId: orgId,
-        },
-      });
-
-      if (!userOrg) {
-        await prisma.userOrganization.create({
-          data: {
-            userId,
-            organizationId: orgId,
-            role: Role.ADMIN,
-            joinedAt: new Date(),
-          },
+            planType: 'FREE',
+            users: {
+              create: {
+                userId,
+                role: Role.ADMIN,
+                joinedAt: new Date()
+              }
+            }
+          }
         });
       }
     }
 
-    return NextResponse.json({ success: true });
+    // 4. Sync Prisma -> Clerk (Create missing orgs in Clerk)
+    for (const org of prismaOrgs) {
+      if (!clerkOrgIds.has(org.id)) {
+        try {
+          // Create organization in Clerk
+          const clerkOrg = await clerkClient.organizations.createOrganization({
+            name: org.name,
+            slug: org.slug,
+            // Use existing org's image if available
+            // imageUrl: org.avatarUrl || undefined,
+            
+            // Create initial membership for the creating user
+            createdBy: userId,
+          });
+
+          // Update Prisma org with any new Clerk-generated fields
+          await prisma.organization.update({
+            where: { id: org.id },
+            data: {
+              id: clerkOrg.id, // Update to match Clerk's ID
+              avatarUrl: clerkOrg.imageUrl || org.avatarUrl,
+              slug: clerkOrg.slug || org.slug
+            }
+          });
+        } catch (error) {
+          console.error(`Failed to sync org ${org.id} to Clerk:`, error);
+        }
+      }
+    }
+
+    // 5. Sync organization details (Update existing orgs)
+    for (const membership of clerkMemberships.data) {
+      const orgId = membership.organization.id;
+      if (prismaOrgIds.has(orgId)) {
+        await prisma.organization.update({
+          where: { id: orgId },
+          data: {
+            name: membership.organization.name || undefined,
+            slug: membership.organization.slug || undefined,
+            avatarUrl: membership.organization.imageUrl || undefined,
+            updatedAt: new Date()
+          }
+        });
+      }
+    }
+
+    return NextResponse.json({ 
+      success: true,
+      syncedOrganizations: {
+        clerk: clerkMemberships.data.length,
+        prisma: prismaOrgs.length
+      }
+    });
+
   } catch (error) {
     console.error("Sync error:", error);
     return new NextResponse(
       JSON.stringify({
         error: "Internal server error",
-        details: error instanceof Error ? error.message : "Unknown error",
+        details: error instanceof Error ? error.message : "Unknown error"
       }),
       { status: 500 }
     );

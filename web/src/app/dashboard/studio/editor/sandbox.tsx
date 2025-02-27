@@ -1,79 +1,48 @@
-import {
-  useActiveCode,
-  useSandpack,
-  SandpackProvider,
-  SandpackLayout,
-  SandpackCodeEditor,
-  SandpackPreview,
-  SandpackThemeProvider,
-  SandpackConsole,
-  SandpackFileExplorer
-} from "@codesandbox/sandpack-react";
-import { javascript } from "@codemirror/lang-javascript";
+'use client'
 
+import { useEffect, useRef, useState } from 'react'
+import { CodeSandbox } from '@codesandbox/sdk'
 
-const Sandbox = () => {
+export default function Sandbox() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [sandboxUrl, setSandboxUrl] = useState<string>('')
+  const [error, setError] = useState<string>('')
+
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    const initSandbox = async () => {
+      try {
+        const sdk = new CodeSandbox(process.env.NEXT_PUBLIC_CSB_API_KEY);
+        const sandbox = await sdk.sandbox.create();
+        setSandboxUrl(sandbox.editorUrl);
+      } catch (err) {
+        setError('Failed to initialize studio');
+        console.error(err);
+      }
+    }
+
+    initSandbox()
+  }, [])
+
+  if (error) {
+    return (
+      <div className="w-full h-full flex items-center justify-center text-red-500">
+        {error}
+      </div>
+    )
+  }
+
   return (
-    <SandpackProvider
-      template="react"
-      theme={"auto"}
-      files={{
-        "/src/index.js": {
-          code: `import React from "react";
-import ReactDOM from "react-dom";
-import "./styles.css";
-`,
-        },
-        "/src/App.js": {
-          code: `import React from "react";
-import "./styles.css";
-`,
-        },
-        "/src/styles.css": {
-          code: `body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f0f0f0;
+    <div className="w-full h-full">
+      {sandboxUrl && (
+      <iframe 
+        src={sandboxUrl}
+        className="w-full h-full border-0"
+        allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking; fullscreen; clipboard-write; clipboard-read; autoplay; display-capture; picture-in-picture; web-share; cross-origin-isolated"
+        sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts allow-downloads allow-orientation-lock allow-pointer-lock allow-popups-to-escape-sandbox allow-top-navigation allow-top-navigation-by-user-activation"
+      />
+      )}
+    </div>
+  )
 }
-`,
-        },
-      }}
-      >
-      <SandpackLayout>
-        <SandpackFileExplorer/>
-
-        <SandpackCodeEditor
-          showInlineErrors
-          showLineNumbers
-          showTabs
-          showRunButton
-          className="h-full w-full"
-          closableTabs
-          additionalLanguages={[
-            {
-              name: "javascript",
-              extensions: [".js"],
-              language: javascript(),
-            },
-          ]}
-        />
-        <SandpackPreview 
-          showNavigator
-          showOpenNewtab
-        />
-        <SandpackConsole
-          showHeader
-          standalone
-          showSetupProgress
-        />
-      </SandpackLayout>
-    </SandpackProvider>
-  );
-};
-
-export default Sandbox;
