@@ -1,8 +1,9 @@
-import { auth, createClerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { Role } from "@prisma/client";
+import { auth, createClerkClient } from "@clerk/nextjs/server";
 import { nanoid } from 'nanoid';
+
+import { prisma } from "@/lib/prisma";
 
 const clerkClient = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY,

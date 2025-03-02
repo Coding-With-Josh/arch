@@ -1,13 +1,13 @@
-"use client";
-
 import * as React from "react";
-import { usePathname } from "next/navigation";
-import { Command } from "cmdk";
-import { AnimatePresence, motion } from "framer-motion";
-import { Search, Package } from "lucide-react";
-import { editorCommands, dashboardCommands } from "./command/commands";
-import { ScrollArea } from "../ui/scroll-area";
+
 import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
+import { Command } from "cmdk";
+import { Search, Package } from "lucide-react";
+import { usePathname } from "next/navigation";
+
+import { ScrollArea } from "../ui/scroll-area";
+import { editorCommands, dashboardCommands } from "./command/commands";
 
 export function CommandCenter() {
   const [open, setOpen] = React.useState(false);
@@ -161,4 +161,10 @@ function CommandItem({
         {subtitle && <span className="text-xs text-zinc-500">{subtitle}</span>}
       </div>
       {shortcut && (
-        <kbd className="pointer-events-none absolute right-2 top-[50%] -translate-y-[50%] rounded b
+        <kbd className="pointer-events-none absolute right-2 top-[50%] -translate-y-[50%] rounded border border-zinc-800 bg-zinc-900 px-1.5 py-0.5 text-xs text-zinc-400 opacity-100 group-hover:border-zinc-700">
+          {shortcut}
+        </kbd>
+      )}
+    </Command.Item>
+  );
+}

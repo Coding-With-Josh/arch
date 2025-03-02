@@ -1,8 +1,9 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
-import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { Role } from "@prisma/client";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { useUser } from "@clerk/nextjs";
+
+import { prisma } from "@/lib/prisma";
 
 export async function POST() {
   try {
