@@ -12,12 +12,6 @@ const font = Inter({
 export const metadata: Metadata = {
   title: "Arch",
   description: "Build. Ship. Scale.",
-  applicationName: "Arch",
-  icons: {
-    icon: require("../assets/images/brand/arch_logo.jpg"),
-    apple: require("../assets/images/brand/arch_logo.jpg"),
-    other: require("../assets/images/brand/arch_logo.jpg"),
-  },
 };
 
 export default function RootLayout({
