@@ -1,43 +1,44 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { usePathname } from 'next/navigation'
-import { Command } from "cmdk"
-import { AnimatePresence, motion } from "framer-motion"
-import { Search, Package } from "lucide-react"
-import { editorCommands, dashboardCommands } from "./command/commands"
-import { ScrollArea } from "../ui/scroll-area"
+import * as React from "react";
+import { usePathname } from "next/navigation";
+import { Command } from "cmdk";
+import { AnimatePresence, motion } from "framer-motion";
+import { Search, Package } from "lucide-react";
+import { editorCommands, dashboardCommands } from "./command/commands";
+import { ScrollArea } from "../ui/scroll-area";
+import Link from "next/link";
 
 export function CommandCenter() {
-  const [open, setOpen] = React.useState(false)
-  const [search, setSearch] = React.useState("")
-  const pathname = usePathname()
-  const isEditorPage = pathname?.includes('/studio/editor')
-  
+  const [open, setOpen] = React.useState(false);
+  const [search, setSearch] = React.useState("");
+  const pathname = usePathname();
+  const isEditorPage = pathname?.includes("/studio/editor");
+
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        setOpen((open) => !open)
+        e.preventDefault();
+        setOpen((open) => !open);
       }
-    }
+    };
 
-    document.addEventListener("keydown", down)
-    return () => document.removeEventListener("keydown", down)
-  }, [])
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
   const runCommand = React.useCallback((command: () => void) => {
-    setOpen(false)
-    command()
-  }, [])
+    setOpen(false);
+    command();
+  }, []);
 
-  const commands = isEditorPage ? editorCommands : dashboardCommands
+  const commands = isEditorPage ? editorCommands : dashboardCommands;
 
   return (
     <AnimatePresence>
       {open && (
         <div className="fixed inset-0 z-50">
-          <motion.div 
+          <motion.div
             className="fixed inset-0 bg-zinc-950/70 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -45,7 +46,7 @@ export function CommandCenter() {
             onClick={() => setOpen(false)}
           />
 
-          <motion.div 
+          <motion.div
             className="fixed left-[33%] top-[50%] w-full max-w-[640px]"
             initial={{ opacity: 0, scale: 0.95, y: "-45%" }}
             animate={{ opacity: 1, scale: 1, y: "-50%" }}
@@ -60,7 +61,7 @@ export function CommandCenter() {
                 <div className="flex items-center gap-2 text-zinc-400">
                   <Search className="h-4 w-4" />
                 </div>
-                <Command.Input 
+                <Command.Input
                   value={search}
                   onValueChange={setSearch}
                   placeholder="Type a command or search..."
@@ -70,32 +71,43 @@ export function CommandCenter() {
 
               <Command.List className="overflow-auto scrollbar-thin max-h-[55vh] custom-scrollbar [&_[cmdk-list-sizer]]:p-4">
                 <ScrollArea>
-                  
-                <div className="px-1 py-2 space-y-4">
-                  {commands.map((group) => (
-                    <Command.Group 
-                      key={group.group}
-                      heading={
-                        <div className="flex items-center pr-1 gap-2 text-xs font-semibold text-zinc-500">
-                          <group.icon className={`h-3 w-3 ${group.color}`} />
-                          {group.group}
-                        </div>
-                      }
-                    >
-                      {group.items.map((item) => (
-                        <CommandItem
-                          key={item.title}
-                          onSelect={() => runCommand(item.action)}
-                          icon={item.icon}
-                          title={item.title}
-                          subtitle={item.subtitle}
-                          shortcut={item.shortcut}
-                        />
-                      ))}
-                    </Command.Group>
-                  ))}
-                </div>
-                
+                  <div className="px-1 py-2 space-y-4">
+                    {commands.map((group) => (
+                      <Command.Group
+                        key={group.group}
+                        heading={
+                          <div className="flex items-center pr-1 gap-2 text-xs font-semibold text-zinc-500">
+                            <group.icon className={`h-3 w-3 ${group.color}`} />
+                            {group.group}
+                          </div>
+                        }
+                      >
+                        {group.items.map((item) =>
+                          item.link ? (
+                            <Link href={item.link} key={item.link}>
+                              <CommandItem
+                                key={item.title}
+                                onSelect={() => runCommand(item.action)}
+                                icon={item.icon}
+                                title={item.title}
+                                subtitle={item.subtitle}
+                                shortcut={item.shortcut}
+                              />
+                            </Link>
+                          ) : (
+                            <CommandItem
+                              key={item.title}
+                              onSelect={() => runCommand(item.action)}
+                              icon={item.icon}
+                              title={item.title}
+                              subtitle={item.subtitle}
+                              shortcut={item.shortcut}
+                            />
+                          )
+                        )}
+                      </Command.Group>
+                    ))}
+                  </div>
                 </ScrollArea>
               </Command.List>
 
@@ -106,8 +118,12 @@ export function CommandCenter() {
                     <span>Arch Studio v1.0.0</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <kbd className="rounded bg-zinc-800/50 px-1.5 py-0.5 text-xs text-zinc-400">⌘</kbd>
-                    <kbd className="rounded bg-zinc-800/50 px-1.5 py-0.5 text-xs text-zinc-400">K</kbd>
+                    <kbd className="rounded bg-zinc-800/50 px-1.5 py-0.5 text-xs text-zinc-400">
+                      ⌘
+                    </kbd>
+                    <kbd className="rounded bg-zinc-800/50 px-1.5 py-0.5 text-xs text-zinc-400">
+                      K
+                    </kbd>
                   </div>
                 </div>
               </div>
@@ -116,21 +132,21 @@ export function CommandCenter() {
         </div>
       )}
     </AnimatePresence>
-  )
+  );
 }
 
-function CommandItem({ 
-  icon: Icon, 
-  title, 
-  subtitle, 
-  shortcut, 
-  onSelect 
-}: { 
-  icon: any
-  title: string
-  subtitle?: string
-  shortcut?: string
-  onSelect: () => void
+function CommandItem({
+  icon: Icon,
+  title,
+  subtitle,
+  shortcut,
+  onSelect,
+}: {
+  icon: any;
+  title: string;
+  subtitle?: string;
+  shortcut?: string;
+  onSelect: () => void;
 }) {
   return (
     <Command.Item
@@ -145,10 +161,4 @@ function CommandItem({
         {subtitle && <span className="text-xs text-zinc-500">{subtitle}</span>}
       </div>
       {shortcut && (
-        <kbd className="pointer-events-none absolute right-2 top-[50%] -translate-y-[50%] rounded border border-zinc-800 bg-zinc-900 px-1.5 py-0.5 text-xs text-zinc-400 opacity-100 group-hover:border-zinc-700">
-          {shortcut}
-        </kbd>
-      )}
-    </Command.Item>
-  )
-}
+        <kbd className="pointer-events-none absolute right-2 top-[50%] -translate-y-[50%] rounded b

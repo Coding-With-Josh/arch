@@ -82,7 +82,7 @@ model Organization {
   stripeCustomerId String?
   avatarUrl        String?
   createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  updatedAt        DateTime @default(now())
 
   users          UserOrganization[]
   projects       Project[]
@@ -147,12 +147,78 @@ model Project {
   deployments  Deployment[]
   apiKeys      ApiKey[]
   activities   Activity[]
+  sandboxes    Sandbox[]    // New relation
+  templates    Template[]   // New relation
 }
 
 enum ProjectType {
-  WEB2
-  WEB3
+  WEB
   API
+  MOBILE
+  DESKTOP
+  IOT
+  BLOCKCHAIN
+  AI
+  MACHINE_LEARNING
+  DATA_SCIENCE
+  HACKATHON
+  COMMUNITY_PROJECT
+  OTHER
+}
+
+// New models for Studio/Sandbox functionality
+model Sandbox {
+  id          String       @id @default(uuid())
+  name        String
+  projectId   String
+  templateId  String?
+  files       SandboxFile[]
+  environment Json?        // Store environment variables
+  settings    Json?        // Store editor/sandbox settings
+  isPublic    Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  template    Template?   @relation(fields: [templateId], references: [id])
+  snapshots   Snapshot[]
+}
+
+model SandboxFile {
+  id        String   @id @default(uuid())
+  sandboxId String
+  path      String
+  content   String   @db.Text
+  type      String   // file extension or type
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sandbox   Sandbox    @relation(fields: [sandboxId], references: [id], onDelete: Cascade)
+}
+
+model Template {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  type        String    // e.g., 'react', 'node', 'universal'
+  files       Json      // Template files structure
+  projectId   String?   // Optional: if template belongs to specific project
+  isPublic    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  project     Project?  @relation(fields: [projectId], references: [id])
+  sandboxes   Sandbox[]
+}
+
+model Snapshot {
+  id        String   @id @default(uuid())
+  sandboxId String
+  name      String
+  files     Json     // Snapshot of sandbox files
+  createdAt DateTime @default(now())
+
+  sandbox   Sandbox  @relation(fields: [sandboxId], references: [id], onDelete: Cascade)
 }
 
 model Deployment {

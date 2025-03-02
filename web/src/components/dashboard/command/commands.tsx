@@ -16,9 +16,10 @@ import {
   Box,
   Boxes,
   Share2,
-  Sparkles
+  Sparkles,
+  CodeIcon
 } from "lucide-react"
-
+ 
 export const editorCommands = [
   {
     group: "File",
@@ -27,6 +28,7 @@ export const editorCommands = [
     items: [
       {
         icon: Plus,
+        link: "#",
         title: "New File",
         subtitle: "Create a new file",
         shortcut: "⌘N",
@@ -36,6 +38,7 @@ export const editorCommands = [
         icon: FolderPlus,
         title: "New Folder",
         subtitle: "Create a new folder",
+        link: "#",
         shortcut: "⌘⇧N",
         action: () => console.log("new folder")
       },
@@ -43,6 +46,7 @@ export const editorCommands = [
         icon: Save,
         title: "Save File",
         subtitle: "Save current file",
+        link: "#",
         shortcut: "⌘S",
         action: () => console.log("save file")
       },
@@ -57,12 +61,14 @@ export const editorCommands = [
         icon: Terminal,
         title: "Toggle Terminal",
         subtitle: "Show/hide terminal panel",
+        link: "#",
         shortcut: "⌘J",
         action: () => console.log("toggle terminal")
       },
       {
         icon: Search,
         title: "Find in Files",
+        link: "#",
         subtitle: "Search across project",
         shortcut: "⌘⇧F",
         action: () => console.log("find in files")
@@ -70,6 +76,7 @@ export const editorCommands = [
       {
         icon: Settings2,
         title: "Editor Settings",
+        link: "#",
         subtitle: "Configure editor",
         action: () => console.log("settings")
       },
@@ -84,6 +91,7 @@ export const editorCommands = [
         icon: Play,
         title: "Run Project",
         subtitle: "Start development server",
+        link: "#",
         shortcut: "⌘R",
         action: () => console.log("run project")
       },
@@ -91,12 +99,14 @@ export const editorCommands = [
         icon: Bug,
         title: "Debug",
         subtitle: "Start debugging",
+        link: "#",
         shortcut: "F5",
         action: () => console.log("debug")
       },
       {
         icon: GitBranch,
         title: "Git Commands",
+        link: "#",
         subtitle: "Source control actions",
         action: () => console.log("git")
       },
@@ -111,17 +121,20 @@ export const editorCommands = [
         icon: Bot,
         title: "Generate Code",
         subtitle: "AI code generation",
+        link: "#",
         shortcut: "⌘⇧G",
         action: () => console.log("generate code")
       },
       {
         icon: Bot,
         title: "Explain Code",
+        link: "#",
         subtitle: "Get code explanation",
         action: () => console.log("explain code")
       },
       {
         icon: Bot,
+        link: "#",
         title: "Fix Issues",
         subtitle: "AI code fixes",
         action: () => console.log("fix code")
@@ -140,6 +153,7 @@ export const dashboardCommands = [
         icon: Plus,
         title: "New Project",
         subtitle: "Create a new project",
+        link: "#",
         shortcut: "⌘N",
         action: () => console.log("new project")
       },
@@ -147,13 +161,22 @@ export const dashboardCommands = [
         icon: Share2,
         title: "Share Project",
         subtitle: "Invite collaborators",
+        link: "#",
         action: () => console.log("share project")
       },
       {
         icon: Settings2,
         title: "Project Settings",
         subtitle: "Configure project",
+        link: "#",
         action: () => console.log("project settings")
+      },
+      {
+        icon: CodeIcon,
+        title: "Go to Studio",
+        subtitle: "View all editors in this project",
+        link: "/dashboard/studio",
+        action: () => console.log("go to studio")
       },
     ]
   },
@@ -166,12 +189,16 @@ export const dashboardCommands = [
         icon: Users,
         title: "Invite Members",
         subtitle: "Add team members",
+        link: "#",
+
         action: () => console.log("invite members")
       },
       {
         icon: Layout,
         title: "Manage Roles",
         subtitle: "Update permissions",
+        link: "#",
+
         action: () => console.log("manage roles")
       },
     ]
@@ -185,10 +212,14 @@ export const dashboardCommands = [
         icon: WalletCards,
         title: "Billing",
         subtitle: "Manage subscription",
-        action: () => console.log("billing")
+        action: () => console.log("billing"),
+        link: "#",
+
       },
       {
         icon: Settings2,
+        link: "#",
+
         title: "Settings",
         subtitle: "Workspace preferences",
         action: () => console.log("settings")
