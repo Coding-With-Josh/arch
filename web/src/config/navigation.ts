@@ -55,7 +55,7 @@ import {
     {
       title: "Development",
       items: [
-        {
+        { 
           title: "Projects",
           href: "/dashboard/projects",
           icon: Boxes,
@@ -93,7 +93,7 @@ import {
           ]
         },
         {
-          title: "Smart Contract Studio",
+          title: "Arch Studio",
           href: "/dashboard/studio",
           icon: Code2,
           items: [

@@ -1,22 +1,24 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useCollapsibleState } from "@/hooks/use-collapsible-state"
 import type { ReactNode } from "react"
-import { ClientAppSidebar } from "@/components/dashboard/sidebar/client-app-sidebar"
-import { Breadcrumb } from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
+import { useEffect, useState } from "react"
+
+import { Bell, LucideIcon } from "lucide-react"
+import { PlanType, ProjectType } from "@prisma/client"
+import { usePathname } from "next/navigation"
+
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { WalletStatus } from "@/components/ui/wallet-status"
+import { Breadcrumb } from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button"
-import { Bell, LucideIcon } from "lucide-react"
-import { PlanType, ProjectType } from "@prisma/client"
+import { ClientAppSidebar } from "@/components/dashboard/sidebar/client-app-sidebar"
 import { CommandCenter } from "@/components/dashboard/command"
-import { usePathname } from "next/navigation"
+import { Separator } from "@/components/ui/separator"
+import { WalletStatus } from "@/components/ui/wallet-status"
+import { useCollapsibleState } from "@/hooks/use-collapsible-state"
 
 interface DashboardClientProps {
   children: ReactNode
@@ -74,10 +76,10 @@ export function DashboardClient({
 
   if (isEditorPage) {
     return (
-      <div className="fixed inset-0 w-screen h-screen overflow-hidden">
+      <main className="h-[calc(100vh-80px)] w-full overflow-y-auto p-6 bg-zinc-950/50">
         <CommandCenter />
         {children}
-      </div>
+      </main>
     )
   }
 
