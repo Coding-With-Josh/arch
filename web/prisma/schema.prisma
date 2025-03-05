@@ -52,8 +52,10 @@ model User {
   updatedAt           DateTime       @updatedAt
   lastUrl             String?
   lastLogin           DateTime?
+  planType           PlanType
   lastActive          DateTime?
-
+    subId    String?
+billingHistory BillingHistory[]
   organizations      UserOrganization[]
   ownedOrganizations Organization[]     @relation("OwnedOrganizations")
   activities         Activity[]
@@ -78,8 +80,8 @@ model Organization {
   ownerId          String
   logo             String?
   planType         PlanType @default(FREE)
-  stripePriceId    String?
-  stripeCustomerId String?
+  subPriceId    String?
+  subCustomerId String?
   avatarUrl        String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @default(now())
@@ -244,6 +246,7 @@ enum DeploymentStatus {
 model BillingHistory {
   id              String   @id @default(uuid())
   organizationId  String
+  userId          String
   amount          Float
   currency        String
   status          String
@@ -252,6 +255,7 @@ model BillingHistory {
   createdAt       DateTime @default(now())
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ApiKey {

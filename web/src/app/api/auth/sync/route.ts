@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { Role } from "@prisma/client";
+import { PlanType, Role } from "@prisma/client";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { useUser } from "@clerk/nextjs";
 
@@ -69,6 +69,7 @@ export async function POST() {
               id: defaultProvider.id
             }
           },
+          planType: PlanType.FREE
         }
       });
     } else {

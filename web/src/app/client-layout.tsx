@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Paddle } from "@paddle/paddle-js";
 import { useRouter } from "next/navigation";
 import { syncUser } from "@/lib/sync";
 
@@ -12,7 +13,9 @@ export default function ClientLayout({
   const router = useRouter();
 
 
+
   useEffect(() => {
+
     const handleSync = async () => {
       try {
         await syncUser();
