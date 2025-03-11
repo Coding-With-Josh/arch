@@ -1,99 +1,56 @@
-'use client';
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { Activity, FileCode, Users, Building2 } from "lucide-react";
+import { Building2, FileCode, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { organization } from '@/actions/organization';
+import { prisma } from "@/lib/db";
 
-interface Organization {
-  id: string;
-  name: string;
-  slug: string;
-  logo?: string | null;
-  planType: string;
-  avatarUrl?: string | null;
-  users: Array<{
-    id: string;
-    organizationId: string;
-    userId: string;
-    role: string;
-    inviteStatus: string;
-    joinedAt: Date;
-  }>;
-  projects: Array<{
-    id: string;
-    name: string;
-    type: string;
-    deploymentUrl?: string | null;
-  }>;
-}
+export default async function OrganizationPage({ params }: { params: { slug: string } }) {
+  console.log('Server: Fetching organization with slug:', params.slug);
 
-export default function OrganizationPage({params}: {params: {slug: string}}) {
-  const [org, setOrg] = useState<Organization | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const org = await prisma.organization.findUnique({
+    where: {
+      slug: params.slug,
+    },
+    include: {
+      _count: true,
+      users: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              avatarUrl: true,
+              _count: true
+            },
+          },
+        },
+      },
+      projects: {
+        include: {
+          deployments: true,
+        },
+      },
+    },
+  });
 
-  useEffect(() => {
-    async function fetchOrg() {
-      if (!params?.slug) return;
-    
-      console.log('Attempting to fetch organization:', params.slug);
-      setLoading(true);
+  console.log('Server: Found organization:', org ? 'yes' : 'no');
 
-      try {
-        const result = await organization.getOrganizationBySlug(params.slug);
-        console.log('API Response:', result);
-        
-        if (result.success && result.data) {
-          setOrg(result.data);
-          setError(null);
-        } else {
-          setError(result.error || 'Organization not found');
-          console.error('Failed to fetch organization:', result.debug);
-          setOrg(null);
-        }
-      } catch (err) {
-        console.error('Error fetching organization:', err);
-        setError('Failed to load organization');
-        setOrg(null);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchOrg();
-  }, [params?.slug]);
-
-  // Show loading state
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
-        <div className="flex flex-col items-center gap-2">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-zinc-500" />
-          <p className="text-sm text-zinc-400">Loading organization...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Show error state
-  if (error || !org) {
+  if (!org) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)]">
         <Building2 className="h-12 w-12 text-zinc-500 mb-4" />
         <h2 className="text-xl text-zinc-200 mb-2">Organization not found</h2>
-        <p className="text-zinc-400">{error || 'Please check the URL and try again'}</p>
-        <pre className="mt-4 p-4 bg-zinc-900 rounded-lg text-xs text-zinc-400">
-          Slug: {params?.slug}
+        <p className="text-zinc-400">Please check the URL and try again</p>
+        <pre className="mt-4 p-4 bg-zinc-900 rounded-lg text-xs text-zinc-400 overflow-auto">
+          Searched for slug: {params.slug}
         </pre>
       </div>
     );
   }
 
   const stats = {
-    totalProjects: org.projects?.length || 0,
-    activeProjects: org.projects?.filter(p => p.deploymentUrl)?.length || 0,
-    totalMembers: org.users?.length || 0,
+    totalProjects: org._count.projects,
+    activeProjects: org.projects.filter(p => p.deploymentUrl).length,
+    totalMembers: org._count.users,
   };
 
   return (
