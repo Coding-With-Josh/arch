@@ -9,10 +9,10 @@ import PricingSection from "@/components/sections/pricing";
 
 
 export default function Home() {
-
+  
 
   return (
-    <div className="w-screen min-h-screen flex flex-col items-center bg-zinc-950">
+    <div className="max-w-screen overflow-x-hidden min-h-screen flex flex-col items-center bg-zinc-950">
           <Navbar/>
     <HeroSectionDemo/>
     {/* <CreateOrganization /> */}

@@ -54,13 +54,14 @@ export async function POST() {
           email,
           name: user.fullName || null,
           username: user.username || null,
-          avatarUrl: user.imageUrl || null,
+          avatarUrl: user.imageUrl,
           role: Role.USER,
           onboardingCompleted: false,
           onboardingStep: 0,
           isVerified: false,
           isActive: true,
           themePreference: "dark",
+
           accentColor: "blue",
           walletAddress: user.primaryWeb3WalletId || null,
           // Connect to the default wallet provider

@@ -35,22 +35,22 @@ export function CommandCenter() {
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-50">
-          <motion.div
-            className="fixed inset-0 bg-zinc-950/90 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setOpen(false)}
-          />
+      <div className="fixed inset-0 z-50 flex items-center justify-center w-screen h-screen">
+        <motion.div
+        className="fixed inset-0 bg-zinc-950/90 backdrop-blur-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={() => setOpen(false)}
+        />
 
-          <motion.div
-            className="fixed left-[50%] top-[50%] w-full max-w-[640px] -translate-x-1/2"
-            initial={{ opacity: 0, scale: 0.95, y: "-45%" }}
-            animate={{ opacity: 1, scale: 1, y: "-50%" }}
-            exit={{ opacity: 0, scale: 0.95, y: "-45%" }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-          >
+        <motion.div
+        className="w-full max-w-[640px]"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+        >
             <Command
               className="relative overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50 shadow-2xl backdrop-blur-xl"
               loop
@@ -65,14 +65,14 @@ export function CommandCenter() {
                 />
               </div>
 
-              <Command.List className="max-h-[400px] overflow-hidden overflow-y-auto scrollbar-none">
+              <Command.List className="max-h-[400px] overflow-hidden overflow-y-auto scrollbar-none mt-2">
                 <ScrollArea className="px-3 py-2">
                   <div className="space-y-2">
                     {commands.map((group) => (
                       <Command.Group
                         key={group.group}
                         heading={
-                          <div className="flex items-center gap-2 text-xs font-medium text-zinc-400 px-2 py-1">
+                          <div className="flex items-center gap-2 text-xs font-medium text-zinc-400 px-2 py-1 mb-2">
                             <group.icon className={`h-3.5 w-3.5 ${group.color}`} />
                             {group.group}
                           </div>

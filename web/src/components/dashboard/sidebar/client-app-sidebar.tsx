@@ -67,7 +67,8 @@ export function ClientAppSidebar({ data, ...props }: ClientAppSidebarProps & Rea
       className="h-screen min-w-[280px] bg-zinc-950 border-r border-zinc-800/50"
     >
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} /> 
+        {}
+        <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent className="px-2">
         <NavMain/>

@@ -18,6 +18,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { usePathname } from "next/navigation"
+import Link from "next/link"
 
 interface Team {
   id: string | null
@@ -32,6 +34,7 @@ interface TeamSwitcherProps {
 }
 
 export function TeamSwitcher({ teams }: TeamSwitcherProps) {
+  const pathname = usePathname()
   const { isMobile } = useSidebar()
   const [open, setOpen] = React.useState(false)
   const [activeTeam, setActiveTeam] = React.useState<Team>(teams[0] || {
@@ -41,6 +44,35 @@ export function TeamSwitcher({ teams }: TeamSwitcherProps) {
     slug: null,
     avatarUrl: null
   })
+
+  const isOrgPage = pathname?.includes('/dashboard/org')
+
+  if (isOrgPage) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton size="lg">
+            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-zinc-800 border border-zinc-700">
+              {activeTeam.avatarUrl ? (
+                <img 
+                  src={activeTeam.avatarUrl} 
+                  alt={activeTeam.name || ''} 
+                  className="size-4 rounded"
+                />
+              ) : (
+                <Building2 className="size-4 text-zinc-400" />
+              )}
+            </div>  
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-medium text-zinc-100">{activeTeam.name}</span>
+              <span className="truncate text-xs text-zinc-400">{activeTeam.planType.toLowerCase()}</span>
+            </div>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    )
+  }
+
 
   return (
     <SidebarMenu>
@@ -53,7 +85,7 @@ export function TeamSwitcher({ teams }: TeamSwitcherProps) {
             >
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-zinc-800 border border-zinc-700">
                 <Building2 className="size-4 text-zinc-400" />
-              </div>
+              </div>  
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium text-zinc-100">{activeTeam?.name || "Select Team"}</span>
                 <span className="truncate text-xs text-zinc-400">{activeTeam?.planType?.toLowerCase() || "No plan"}</span>
@@ -71,17 +103,19 @@ export function TeamSwitcher({ teams }: TeamSwitcherProps) {
               Teams
             </DropdownMenuLabel>
             {teams.map((team, index) => (
-              <DropdownMenuItem
-                key={team.id}
-                onClick={() => setActiveTeam(team)}
-                className="gap-2 p-2 text-white"
-              >
-                <div className="flex size-6 items-center justify-center rounded-sm border border-[#1F1F23]">
-                  <Building2 className="size-4 shrink-0" />
-                </div>
-                {team.name}
-                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
-              </DropdownMenuItem>
+              <Link href={`/dashboard/org/${team.slug}`} key={team.id}>
+                <DropdownMenuItem
+                  key={team.id}
+                  onClick={() => setActiveTeam(team)}
+                  className="gap-2 p-2 text-white"
+                >
+                  <div className="flex size-6 items-center justify-center rounded-sm border border-[#1F1F23]">
+                    <Building2 className="size-4 shrink-0" />
+                  </div>
+                  {team.name}
+                  <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </Link>
             ))}
             <DropdownMenuSeparator className="bg-[#1F1F23]" />
             <DropdownMenuItem className="gap-2 p-2">
