@@ -3,7 +3,7 @@
 import type { ReactNode } from "react"
 import { useEffect, useState } from "react"
 
-import { Bell, LucideIcon } from "lucide-react"
+import { Bell, LucideIcon, FileIcon, FolderIcon, CodeIcon } from "lucide-react"
 import { PlanType, ProjectType } from "@prisma/client"
 import { usePathname } from "next/navigation"
 
@@ -19,6 +19,23 @@ import { CommandCenter } from "@/components/dashboard/command"
 import { Separator } from "@/components/ui/separator"
 import { WalletStatus } from "@/components/ui/wallet-status"
 import { useCollapsibleState } from "@/hooks/use-collapsible-state"
+
+
+const ICON_COMPONENTS = {
+  'file': FileIcon,
+  'folder': FolderIcon,
+  'code': CodeIcon,
+} as const
+
+interface Project {
+  id: string
+  name: string | null
+  slug: string | null
+  icon: keyof typeof ICON_COMPONENTS  // Changed from iconName to icon
+  type: ProjectType
+  repository: string | null
+  deploymentUrl: string | null
+}
 
 interface DashboardClientProps {
   children: ReactNode
@@ -40,15 +57,7 @@ interface DashboardClientProps {
     logo: string | null
     avatarUrl: string | null
   }>
-  projects: Array<{
-    id: string | null
-    name: string | null
-    slug: string | null
-    icon: LucideIcon
-    type: ProjectType
-    repository: string | null
-    deploymentUrl: string | null
-  }>
+  projects: Project[]
 }
 
 export function DashboardClient({
@@ -64,6 +73,12 @@ export function DashboardClient({
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Render icon based on name
+  const renderIcon = (icon: keyof typeof ICON_COMPONENTS) => {
+    const IconComponent = ICON_COMPONENTS[icon]
+    return <IconComponent className="h-4 w-4" />
+  }
 
   // Show loading state instead of null
   if (!mounted) {

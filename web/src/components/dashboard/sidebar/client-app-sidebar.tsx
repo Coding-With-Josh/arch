@@ -12,8 +12,12 @@ import {
   Map,
   PieChart,
   Settings2,
+  FolderIcon,
+  FileIcon,
+  CodeIcon,
   SquareTerminal,
 } from "lucide-react"
+
 
 import { NavMain } from "./nav-main"
 import { NavProjects } from "./nav-projects"
@@ -27,6 +31,13 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { SidebarOptInForm } from "./sidebar-opt-in-form"
+import { ProjectType } from "@prisma/client"
+
+const ICON_COMPONENTS = {
+  'file': FileIcon,
+  'folder': FolderIcon,
+  'code': CodeIcon,
+} as const
 
 interface ClientAppSidebarProps {
   data: {
@@ -48,13 +59,13 @@ interface ClientAppSidebarProps {
       avatarUrl: string | null;
     }>;
     projects: Array<{
-      id: string | null;
-      name: string | null;
-      slug: string | null;
-      icon: LucideIcon;
-      type: 'WEB2' | 'WEB3' | 'API';
-      repository: string | null;
-      deploymentUrl: string | null;
+      id: string | null
+      name: string | null
+      slug: string | null
+      icon: keyof typeof ICON_COMPONENTS  // Changed from iconName to icon
+      type: ProjectType
+      repository: string | null
+      deploymentUrl: string | null
     }>;
   }
 }

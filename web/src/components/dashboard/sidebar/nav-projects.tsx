@@ -1,8 +1,11 @@
 "use client"
 
 import {
+  FileIcon,
   Folder,
+  FolderIcon,
   Forward,
+  CodeIcon,
   MoreHorizontal,
   Trash2,
   type LucideIcon,
@@ -24,13 +27,20 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { ProjectType } from "@prisma/client"
+
+const ICON_COMPONENTS = {
+  'file': FileIcon,
+  'folder': FolderIcon,
+  'code': CodeIcon,
+} as const
 
 interface NavProjectsProps {
     id: string | null;
     name: string | null;
-    icon: LucideIcon;
+    icon: keyof typeof ICON_COMPONENTS;  // Changed from iconName to icon
     slug: string | null;
-    type: 'WEB2' | 'WEB3' | 'API';
+    type: ProjectType;
     repository: string | null;
     deploymentUrl: string | null;
 }
@@ -46,7 +56,10 @@ export function NavProjects({ projects }: { projects: NavProjectsProps[] }) {
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
               <a href={`/dashboard/projects/${item.slug}`}>
-                <item.icon className="h-4 w-4"/>
+                {(() => {
+                  const Icon = ICON_COMPONENTS[item.icon]
+                  return <Icon className="h-4 w-4"/>
+                })()}
                 <span>{item.name}</span>
               </a>
             </SidebarMenuButton>

@@ -2,12 +2,12 @@ import { Building2, FileCode, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/db";
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  console.log('Server: Fetching project with slug:', params.slug);
+export default async function Page({ params }: { params: { projectSlug: string } }) {
+  console.log('Server: Fetching project with slug:', params.projectSlug);
 
   const project = await prisma.project.findUnique({
     where: {
-      slug: params.slug,
+      slug: params.projectSlug,
     },
     include: {
       deployments: true,
@@ -26,7 +26,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         <h2 className="text-xl text-zinc-200 mb-2">Project not found</h2>
         <p className="text-zinc-400">Please check the URL and try again</p>
         <pre className="mt-4 p-4 bg-zinc-900 rounded-lg text-xs text-zinc-400 overflow-auto">
-          Searched for slug: {params.slug}
+          Searched for slug: {params.projectSlug}
         </pre>
       </div>
     );

@@ -1,34 +1,56 @@
-import { NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
-
-import { prisma } from '@/lib/prisma'
+import { auth } from "@clerk/nextjs/server"
+import { NextResponse } from "next/server"
+import { prisma } from "@/lib/db"
 
 export async function POST(req: Request) {
   try {
     const { userId } = await auth()
-    if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 })
+    }
 
-    const { name, type, organizationId, icon, repository } = await req.json()
-    const slug = name.toLowerCase().replace(/\s+/g, '-')
+    const body = await req.json()
+    const { name, slug, type, repository, organizationId } = body
+
+    // Check if slug already exists
+    const existingProject = await prisma.project.findFirst({
+      where: {
+        organizationId,
+        slug,
+      },
+    })
+
+    if (existingProject) {
+      return new NextResponse(
+        "A project with this slug already exists in this organization",
+        { status: 400 }
+      )
+    }
 
     const project = await prisma.project.create({
       data: {
         name,
         slug,
         type,
+        repository,
         organizationId,
-        icon,
-        repository
       },
-      include: {
-        organization: true,
-        sandboxes: true
+    })
+
+    // Create initial activity
+    await prisma.activity.create({
+      data: {
+        userId,
+        projectId: project.id,
+        action: "PROJECT_CREATED",
+        metadata: { projectName: name, projectType: type }
       }
     })
 
     return NextResponse.json(project)
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create project' }, { status: 500 })
+    console.error('[PROJECTS]', error)
+    return new NextResponse("Internal error", { status: 500 })
   }
 }
 
