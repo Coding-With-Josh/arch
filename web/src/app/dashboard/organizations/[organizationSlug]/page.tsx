@@ -1,36 +1,36 @@
 import { Building2, FileCode, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/db";
+import { organization } from "@/actions/organization";
+import type { Organization as PrismaOrganization } from "@prisma/client";
 
-export default async function OrganizationPage({ params }: { params: { slug: string } }) {
-  console.log('Server: Fetching organization with slug:', params.slug);
+type Organization = PrismaOrganization & {
+  _count: {
+    projects: number;
+    users: number;
+  };
+  projects: Array<{
+    id: string;
+    name: string;
+    type: string;
+    deploymentUrl?: string | null;
+    deployments?: Array<any>;
+  }>;
+  users: Array<{
+    user: {
+      id: string;
+      name: string | null;
+      email: string;
+      avatarUrl: string | null;
+      _count: any;
+    };
+  }>;
+};
 
-  const org = await prisma.organization.findUnique({
-    where: {
-      slug: params.slug,
-    },
-    include: {
-      _count: true,
-      users: {
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              avatarUrl: true,
-              _count: true
-            },
-          },
-        },
-      },
-      projects: {
-        include: {
-          deployments: true,
-        },
-      },
-    },
-  });
+export default async function OrganizationPage({ params }: { params: { organizationSlug: string } }) {
+  console.log('Server: Fetching organization with slug:', params.organizationSlug);
+  
+  const org = await organization.getOrganizationBySlug(params.organizationSlug) as Organization | null;
 
   console.log('Server: Found organization:', org ? 'yes' : 'no');
 
@@ -41,7 +41,7 @@ export default async function OrganizationPage({ params }: { params: { slug: str
         <h2 className="text-xl text-zinc-200 mb-2">Organization not found</h2>
         <p className="text-zinc-400">Please check the URL and try again</p>
         <pre className="mt-4 p-4 bg-zinc-900 rounded-lg text-xs text-zinc-400 overflow-auto">
-          Searched for slug: {params.slug}
+          Searched for slug: {params.organizationSlug}
         </pre>
       </div>
     );

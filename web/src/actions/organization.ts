@@ -90,59 +90,39 @@ export const organization = {
   // Get organization by ID
   async getOrganizationBySlug(slug: string) {
     if (!slug) {
-      return { success: false, error: "No slug provided" };
+      console.log("No slug provided");
+      return null
     }
 
     try {
-      // Clean the slug
-      const cleanSlug = slug.toLowerCase().trim();
-      console.log("Looking up organization with slug:", cleanSlug);
-
-      const org = await prisma.organization.findUnique({
-        where: {
-          slug: cleanSlug,
-        },
-        include: {
-          users: {
-            include: {
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                  avatarUrl: true,
+      await prisma.organization.findUnique({
+          where: {
+            slug: slug,
+          },
+          include: {
+            _count: true,
+            users: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    avatarUrl: true,
+                    _count: true
+                  },
                 },
               },
             },
-          },
-          projects: {
-            include: {
-              deployments: true,
+            projects: {
+              include: {
+                deployments: true,
+              },
             },
           },
-        },
-      });
-
-      if (!org) {
-        console.log("No organization found with slug:", cleanSlug);
-        return {
-          success: false,
-          error: "Organization not found",
-          debug: {
-            searchedSlug: cleanSlug,
-            originalSlug: slug,
-          },
-        };
-      }
-
-      console.log("Found organization:", org.name);
-      return { success: true, data: org };
+        });
     } catch (error) {
       console.error("Database error:", error);
-      return {
-        success: false,
-        error: "Failed to fetch organization",
-      };
     }
   },
 

@@ -103,7 +103,7 @@ export function TeamSwitcher({ teams }: TeamSwitcherProps) {
               Teams
             </DropdownMenuLabel>
             {teams.map((team, index) => (
-              <Link href={`/dashboard/org/${team.slug}`} key={team.id}>
+              <Link href={`/dashboard/organizations/${team.slug}`} key={team.id}>
                 <DropdownMenuItem
                   key={team.id}
                   onClick={() => setActiveTeam(team)}
