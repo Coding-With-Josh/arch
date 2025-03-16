@@ -1,6 +1,13 @@
 "use client"
 
-import { mainNavigation } from "@/config/navigation"
+import { usePathname } from "next/navigation"
+import {
+  organizationNavigation,
+  projectNavigation,
+  replaceUrlParams,
+  type NavigationItem,
+  type NavigationSection
+} from "@/config/navigation"
 import { ChevronRight } from "lucide-react"
 import {
   Collapsible,
@@ -8,7 +15,6 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import { cn } from "@/lib/utils"
-import { usePathname } from "next/navigation"
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -22,10 +28,39 @@ import {
 
 export function NavMain() {
   const pathname = usePathname()
+  
+  // Improved path matching with optional trailing slashes
+  const organizationMatch = pathname.match(/\/organizations\/([^\/]+)(?:\/|$)/)
+  const projectMatch = pathname.match(/\/projects\/([^\/]+)(?:\/|$)/)
+  
+  const organizationSlug = organizationMatch?.[1]
+  const projectSlug = projectMatch?.[1]
+  
+  // Determine which navigation to use and early return if no org
+  if (!organizationSlug) {
+    return null
+  }
+
+  const navigation: NavigationSection[] = projectSlug ? projectNavigation : organizationNavigation
+
+  // URL parameters for replacing placeholders
+  const urlParams = {
+    organizationSlug,
+    projectSlug: projectSlug ?? ''
+  }
+
+  const getItemUrl = (href: string) => {
+    return replaceUrlParams(href, urlParams)
+  }
+
+  const isCurrentPath = (href: string) => {
+    const processedPath = getItemUrl(href)
+    return pathname === processedPath || pathname.startsWith(`${processedPath}/`)
+  }
 
   return (
     <>
-      {mainNavigation.map((section) => (
+      {navigation.map((section) => (
         <SidebarGroup key={section.title}>
           <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
           <SidebarMenu>
@@ -33,26 +68,40 @@ export function NavMain() {
               <Collapsible
                 key={item.title}
                 asChild
-                defaultOpen={pathname.startsWith(item.href)}
+                defaultOpen={isCurrentPath(item.href)}
               >
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton
+                      asChild={!item.items} // Only use asChild if no subitems
                       className={cn(
                         "group w-full transition-colors duration-200",
-                        pathname === item.href && "bg-zinc-800 text-zinc-100"
+                        isCurrentPath(item.href) && "bg-zinc-800 text-zinc-100"
                       )}
                     >
-                      {item.icon && (
-                        <item.icon className={cn(
-                          "size-4 transition-all duration-200",
-                          "group-hover:scale-110 group-hover:text-zinc-100",
-                          pathname === item.href ? "text-zinc-100" : "text-zinc-400"
-                        )} />
-                      )}
-                      <span>{item.title}</span>
-                      {item.items && (
-                        <ChevronRight className="ml-auto size-4 transition-transform duration-200" />
+                      {!item.items ? (
+                        <a href={getItemUrl(item.href)}>
+                          {item.icon && (
+                            <item.icon className={cn(
+                              "size-4 transition-all duration-200",
+                              "group-hover:scale-110 group-hover:text-zinc-100",
+                              isCurrentPath(item.href) ? "text-zinc-100" : "text-zinc-400"
+                            )} />
+                          )}
+                          <span>{item.title}</span>
+                        </a>
+                      ) : (
+                        <>
+                          {item.icon && (
+                            <item.icon className={cn(
+                              "size-4 transition-all duration-200",
+                              "group-hover:scale-110 group-hover:text-zinc-100",
+                              isCurrentPath(item.href) ? "text-zinc-100" : "text-zinc-400"
+                            )} />
+                          )}
+                          <span>{item.title}</span>
+                          <ChevronRight className="ml-auto size-4 transition-transform duration-200" />
+                        </>
                       )}
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
@@ -62,11 +111,13 @@ export function NavMain() {
                         {item.items.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.href}>
                             <SidebarMenuSubButton
-                              href={subItem.href}
-                              isActive={pathname === subItem.href}
+                              asChild
+                              isActive={isCurrentPath(subItem.href)}
                             >
-                              {subItem.icon && <subItem.icon className="h-4 w-4 mr-2" />}
-                              <span>{subItem.title}</span>
+                              <a href={getItemUrl(subItem.href)}>
+                                {subItem.icon && <subItem.icon className="h-4 w-4 mr-2" />}
+                                <span>{subItem.title}</span>
+                              </a>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
                         ))}

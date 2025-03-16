@@ -1,214 +1,184 @@
 import {
-    LayoutDashboard,
-    Building2,
-    Boxes,
-    Database,
-    Code2,
-    Webhook,
-    ShieldCheck,
-    CreditCard,
-    Settings,
-    Activity,
-    Wallet,
-    Network,
-    GitBranch,
-    Bot,
-    Lock,
-    BarChart3,
-  } from "lucide-react"
-  
-  export const mainNavigation = [
-    {
-      title: "Overview",
-      items: [
-        {
-          title: "Dashboard",
-          href: "/dashboard",
-          icon: LayoutDashboard,
-          items: [
-            {
-              title: "API Usage",
-              href: "/dashboard/api-usage",
-              icon: BarChart3
-            },
-            {
-              title: "Activity",
-              href: "/dashboard/activity",
-              icon: Activity
-            }
-          ]
-        },
-        {
-          title: "Organizations",
-          href: "/dashboard/organizations",
-          icon: Building2,
-          items: [
-            {
-              title: "Teams",
-              href: "/dashboard/organizations/teams",
-              icon: Building2
-            }
-          ]
-        }
-      ]
-    },
-    {
-      title: "Development",
-      items: [
-        { 
-          title: "Projects",
-          href: "/dashboard/projects",
-          icon: Boxes,
-          items: [
-            {
-              title: "Smart Contracts",
-              href: "/dashboard/projects/contracts",
-              icon: Code2
-            },
-            {
-              title: "Deployments",
-              href: "/dashboard/projects/deployments",
-              icon: Network
-            },
-            {
-              title: "Version Control",
-              href: "/dashboard/projects/repos",
-              icon: GitBranch
-            }
-          ]
-        },
-        {
-          title: "Database",
-          href: "/dashboard/database",
-          icon: Database,
-          items: [
-            {
-              title: "Tables",
-              href: "/dashboard/database/tables"
-            },
-            {
-              title: "Web3 Storage",
-              href: "/dashboard/database/web3"
-            }
-          ]
-        },
-        {
-          title: "Arch Studio",
-          href: "/dashboard/studio",
-          icon: Code2,
-          items: [
-            {
-              title: "Editor",
-              href: "/dashboard/studio/editor"
-            },
-            {
-              title: "AI Assistant",
-              href: "/dashboard/studio/ai",
-              icon: Bot
-            }
-          ]
-        }
-      ]
-    },
-    {
-      title: "Security & APIs",
-      items: [
-        {
-          title: "API Gateway",
-          href: "/dashboard/api",
-          icon: Webhook,
-          items: [
-            {
-              title: "Keys",
-              href: "/dashboard/api/keys"
-            },
-            {
-              title: "Usage",
-              href: "/dashboard/api/usage"
-            }
-          ]
-        },
-        {
-          title: "Security",
-          href: "/dashboard/security",
-          icon: ShieldCheck,
-          items: [
-            {
-              title: "Audit Logs",
-              href: "/dashboard/security/logs",
-              icon: Activity
-            },
-            {
-              title: "AI Audits",
-              href: "/dashboard/security/ai-audits",
-              icon: Bot
-            }
-          ]
-        }
-      ]
-    },
-    {
-      title: "Account",
-      items: [
-        {
-          title: "Wallet",
-          href: "/dashboard/wallet",
-          icon: Wallet,
-          items: [
-            {
-              title: "Balances",
-              href: "/dashboard/wallet/balances"
-            },
-            {
-              title: "Transactions",
-              href: "/dashboard/wallet/transactions"
-            }
-          ]
-        },
-        {
-          title: "Billing",
-          href: "/dashboard/billing",
-          icon: CreditCard,
-          items: [
-            {
-              title: "Subscriptions",
-              href: "/dashboard/billing/plans"
-            },
-            {
-              title: "Usage",
-              href: "/dashboard/billing/usage"
-            }
-          ]
-        },
-        {
-          title: "Settings",
-          href: "/dashboard/settings",
-          icon: Settings,
-          items: [
-            {
-              title: "Profile",
-              href: "/dashboard/settings/profile"
-            },
-            {
-              title: "Security",
-              href: "/dashboard/settings/security",
-              icon: Lock
-            }
-          ]
-        }
-      ]
-    }
-  ]
-  
-  export type NavigationItem = {
-    title: string
-    href: string
-    icon?: any
-    items?: NavigationItem[]
+  LayoutDashboard,
+  Building2,
+  Boxes,
+  Database,
+  Code2,
+  Webhook,
+  ShieldCheck,
+  CreditCard,
+  Settings,
+  Activity,
+  Wallet,
+  Network,
+  GitBranch,
+  Bot,
+  Lock,
+  BarChart3,
+  Users,
+  FileCode,
+  Server,
+  Terminal,
+  History,
+  PlayCircle,
+  ScanLine
+} from "lucide-react"
+
+const organizationNavigation = [
+  {
+    title: "Overview",
+    items: [
+      {
+        title: "Dashboard",
+        href: "/dashboard/organizations/[organizationSlug]",
+        icon: LayoutDashboard
+      },
+      {
+        title: "Projects",
+        href: "/dashboard/organizations/[organizationSlug]/projects",
+        icon: Boxes
+      },
+      {
+        title: "Team",
+        href: "/dashboard/organizations/[organizationSlug]/team",
+        icon: Users
+      },
+      {
+        title: "Activity",
+        href: "/dashboard/organizations/[organizationSlug]/activity",
+        icon: Activity
+      }
+    ]
+  },
+  {
+    title: "Settings",
+    items: [
+      {
+        title: "General",
+        href: "/dashboard/organizations/[organizationSlug]/settings",
+        icon: Settings
+      },
+      {
+        title: "Billing",
+        href: "/dashboard/organizations/[organizationSlug]/billing",
+        icon: CreditCard
+      },
+      {
+        title: "Security",
+        href: "/dashboard/organizations/[organizationSlug]/security",
+        icon: ShieldCheck
+      },
+      {
+        title: "API Keys",
+        href: "/dashboard/organizations/[organizationSlug]/api-keys",
+        icon: Webhook
+      }
+    ]
   }
-  
-  export type NavigationSection = {
-    title: string
-    items: NavigationItem[]
+]
+
+const projectNavigation = [
+  {
+    title: "Project",
+    items: [
+      {
+        title: "Overview",
+        href: "/dashboard/organizations/[organizationSlug]/projects/[projectSlug]",
+        icon: LayoutDashboard
+      },
+      {
+        title: "Contracts",
+        href: "/dashboard/organizations/[organizationSlug]/projects/[projectSlug]/contracts",
+        icon: FileCode,
+        items: [
+          {
+            title: "Editor",
+            href: "/dashboard/organizations/[organizationSlug]/projects/[projectSlug]/contracts/editor",
+            icon: Code2
+          },
+          {
+            title: "Deployments",
+            href: "/dashboard/organizations/[organizationSlug]/projects/[projectSlug]/contracts/deployments",
+            icon: Server
+          }
+        ]
+      },
+      {
+        title: "Development",
+        href: "/dashboard/organizations/[organizationSlug]/projects/[projectSlug]/development",
+        icon: Terminal,
+        items: [
+          {
+            title: "Sandboxes",
+            href: "/dashboard/organizations/[organizationSlug]/projects/[projectSlug]/development/sandboxes",
+            icon: PlayCircle
+          },
+          {
+            title: "Version Control",
+            href: "/dashboard/organizations/[organizationSlug]/projects/[projectSlug]/development/repos",
+            icon: GitBranch
+          }
+        ]
+      },
+      {
+        title: "Security",
+        href: "/dashboard/organizations/[organizationSlug]/projects/[projectSlug]/security",
+        icon: ShieldCheck,
+        items: [
+          {
+            title: "Audit Scanner",
+            href: "/dashboard/organizations/[organizationSlug]/projects/[projectSlug]/security/scanner",
+            icon: ScanLine
+          },
+          {
+            title: "History",
+            href: "/dashboard/organizations/[organizationSlug]/projects/[projectSlug]/security/history",
+            icon: History
+          }
+        ]
+      }
+    ]
+  },
+  {
+    title: "Settings",
+    items: [
+      {
+        title: "General",
+        href: "/dashboard/organizations/[organizationSlug]/projects/[projectSlug]/settings",
+        icon: Settings
+      },
+      {
+        title: "Integrations",
+        href: "/dashboard/organizations/[organizationSlug]/projects/[projectSlug]/integrations",
+        icon: Webhook
+      }
+    ]
   }
-  
+]
+
+// Helper function to replace URL parameters
+const replaceUrlParams = (href: string, params: Record<string, string>) => {
+  let url = href
+  Object.entries(params).forEach(([key, value]) => {
+    url = url.replace(`[${key}]`, value)
+  })
+  return url
+}
+
+export {
+  organizationNavigation,
+  projectNavigation,
+  replaceUrlParams
+}
+
+export type NavigationItem = {
+  title: string;
+  href: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  items?: NavigationItem[];
+}
+
+export type NavigationSection = {
+  title: string;
+  items: NavigationItem[];
+}

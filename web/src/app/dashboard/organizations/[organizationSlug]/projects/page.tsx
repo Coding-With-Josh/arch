@@ -13,6 +13,8 @@ import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { CreateProjectForm } from "@/components/forms/create-project-form";
+import { ProjectDialog } from "@/components/dashboard/project-dialog"
+
 
 async function getOrganizationProjects(organizationSlug: string) {
   const projects = await prisma.project.findMany({

@@ -47,7 +47,7 @@ export function ActivityChart({ data }: ActivityChartProps) {
                     return (
                       <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-2 shadow-md">
                         <p className="text-zinc-200 text-sm font-medium">
-                          {payload[0].value.toFixed(2)} actions
+                          {payload[0].payload.value.toFixed(2)} actions
                         </p>
                         <p className="text-zinc-400 text-xs">
                           {payload[0].payload.timestamp}
@@ -76,7 +76,7 @@ export function ActivityChart({ data }: ActivityChartProps) {
         </div>
         <div className="space-y-4 mt-4">
           {data.length > 0 ? (
-            // ...existing activity items code...
+            <p className="text-center text-zinc-500 text-sm">Activity items will be shown here</p>
           ) : (
             <p className="text-center text-zinc-500 text-sm">No recent activity</p>
           )}
