@@ -23,6 +23,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { ProjectDialog } from "@/components/dashboard/project-dialog"
+import { ActivityChart } from "@/components/dashboard/activity-chart"
 
 export default async function OrganizationPage({ params }: { params: { organizationSlug: string } }) {
   const org = await prisma.organization.findUnique({
@@ -85,6 +86,21 @@ export default async function OrganizationPage({ params }: { params: { organizat
     totalApiKeys: org.apiKeys.length,
     activeApiKeys: org.apiKeys.filter(key => !key.expiresAt || key.expiresAt > new Date()).length,
   };
+
+  // Process activities into chart data
+  const activityData = org.projects
+    .flatMap(p => p.activities)
+    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+    .reduce((acc, activity) => {
+      const hour = new Date(activity.createdAt).getHours()
+      const existing = acc.find(d => d.timestamp === `${hour}h`)
+      if (existing) {
+        existing.value += 1
+      } else {
+        acc.push({ timestamp: `${hour}h`, value: 1 })
+      }
+      return acc
+    }, [] as Array<{ timestamp: string; value: number }>)
 
   return (
     <div className="min-h-[calc(100vh-80px)] space-y-6 p-6">
@@ -222,30 +238,8 @@ export default async function OrganizationPage({ params }: { params: { organizat
           </CardContent>
         </Card>
 
-        {/* Recent Activity */}
-        <Card className="bg-zinc-900/50 border-zinc-800">
-          <CardHeader>
-            <CardTitle className="text-zinc-200">Recent Activity</CardTitle>
-            <CardDescription>Latest actions across all projects</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {org.projects.flatMap(p => p.activities).sort((a, b) => 
-                b.createdAt.getTime() - a.createdAt.getTime()
-              ).slice(0, 5).map((activity) => (
-                <div key={activity.id} className="flex items-center gap-3">
-                  <Activity className="h-4 w-4 text-zinc-500" />
-                  <div>
-                    <p className="text-sm text-zinc-200">{activity.action}</p>
-                    <p className="text-xs text-zinc-500">
-                      {formatDistanceToNow(activity.createdAt)} ago
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        {/* Replace the existing activity card with the new chart component */}
+        <ActivityChart data={activityData} />
       </div>
     </div>
   );
