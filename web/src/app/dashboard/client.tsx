@@ -67,7 +67,7 @@ export function DashboardClient({
   projects,
 }: DashboardClientProps) {
   const pathname = usePathname()
-  const isEditorPage = pathname?.includes("/studio/editor")
+  const isEditorPage = pathname?.includes("/editor")
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
