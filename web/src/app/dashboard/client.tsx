@@ -91,7 +91,7 @@ export function DashboardClient({
 
   if (isEditorPage) {
     return (
-      <main className="h-[calc(100vh-80px)] w-full overflow-y-auto p-6 bg-zinc-950/50">
+      <main className="w-screen h-screen">
         <CommandCenter />
         {children}
       </main>
