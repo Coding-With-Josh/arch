@@ -157,7 +157,7 @@ export default function StudioPage() {
             <EditorCard key={i} {...editor} />
           </>
         ))}
-            <Link href="/dashboard/studio/editor">
+            <Link href="#">
             <div className="group relative overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 transition-all hover:bg-zinc-900 hover:shadow-lg">
               <div
                 className="

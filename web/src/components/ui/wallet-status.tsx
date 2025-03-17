@@ -50,7 +50,7 @@ export function WalletStatus() {
           animate={{ opacity: 1, y: 0 }}
           className="grid gap-2"
         >
-          <p className="text-sm font-semibold text-zinc-100">Connected to Ethereum</p>
+          <p className="text-sm font-semibold text-zinc-100">Connected to Solana</p>
           <p className="text-xs text-zinc-400 font-mono">0x1234...5678</p>
         </motion.div>
       </TooltipContent>
