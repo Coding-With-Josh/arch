@@ -8,6 +8,7 @@ import { Glow } from "@/components/sections/landing/blocks/glow";
 import { Mockup, MockupFrame } from "@/components/ui/mockup";
 import { cn } from "@/lib/utils";
 import { RainbowButton } from "@/components/custom/rainbow-button";
+import { WaitlistDialog } from "./waitlist-dialog";
 
 interface HeroAction {
   text: string;
@@ -90,23 +91,13 @@ export function HeroSection({
 
           {/* Actions */}
           <div className="relative z-10 flex animate-appear justify-center gap-4 opacity-0 delay-300">
-            <div className="relative z-10 flex animate-appear justify-center gap-4 opacity-0 delay-300">
-              {/* {actions.map((action, index) => (
-                <Button
-                  key={index}
-                  variant={action.variant}
-                  size="lg"
-                  className="dark:hover:bg-zinc-800"
-                  asChild
-                >
-                  <a href={action.href} className="flex items-center gap-2">
-                    {action.icon}
-                    {action.text}
-                  </a>
-                </Button>
-              ))} */}
-              <RainbowButton>Join waitlist</RainbowButton>
-            </div>
+            <WaitlistDialog 
+              trigger={
+                <RainbowButton>
+                  Join Waitlist
+                </RainbowButton>
+              } 
+            />
           </div>
 
           {/* Image with Glow */}
