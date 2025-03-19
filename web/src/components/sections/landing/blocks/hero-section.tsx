@@ -81,7 +81,7 @@ export function HeroSection({
     <section
       className={cn(
         "text-foreground",
-        "py-12 sm:py-24 md:py-32 px-4 w-screen",
+        "py-12 sm:py-24 md:py-32 px-4 max-w-screen",
         "overflow-hidden pb-0 relative",
         "bg-zinc-950"
       )}
@@ -132,7 +132,10 @@ export function HeroSection({
                 variant="outline"
                 className="gap-2 border-zinc-800 bg-zinc-900/50 flex items-center justify-center hover:scale-105 transition-transform duration-300"
               >
-                <TwitterIcon className="h-3 w-3 text-blue-600" strokeWidth={3} />
+                <TwitterIcon
+                  className="h-3 w-3 text-blue-600"
+                  strokeWidth={3}
+                />
                 <span className="text-zinc-400">{badge.text}</span>
                 <a
                   href={badge.action.href}
@@ -162,20 +165,16 @@ export function HeroSection({
           </motion.p>
 
           {/* Actions */}
-          <motion.div
-            className="flex justify-center gap-4"
-            variants={itemVariants}
-          >
+          <motion.div className="relative z-10 flex animate-appear justify-center gap-4 opacity-0 delay-300"
+          variants={itemVariants}>
+            
             <WaitlistDialog
               trigger={<RainbowButton>Join Waitlist</RainbowButton>}
             />
           </motion.div>
 
           {/* Image with Glow */}
-          <motion.div
-            className="relative pt-[4rem]"
-            variants={itemVariants}
-          >
+          <motion.div className="relative pt-[4rem]" variants={itemVariants}>
             <MockupFrame className="dark:bg-zinc-900 dark:border-zinc-800 hover:scale-105 transition-transform duration-300">
               <Mockup type="responsive">
                 <Image

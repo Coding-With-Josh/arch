@@ -33,7 +33,7 @@ export default function Navbar({ userData }: NavbarProps) {
   return (
     <motion.header
       className={cn(
-        "fixed top-0 z-50 w-full border-b border-zinc-800 bg-zinc-950/60 backdrop-blur-lg transition-all duration-300",
+        "fixed top-0 z-50 w-full border-b border-zinc-800 bg-blue-800/70 backdrop-blur-md transition-all duration-300",
         isScrolled ? "shadow-md" : ""
       )}
       initial={{ y: -100 }}
