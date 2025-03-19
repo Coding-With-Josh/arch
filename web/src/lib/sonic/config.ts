@@ -8,19 +8,11 @@ export const SONIC_CONFIG = {
   EXPLORER_URL: 'https://explorer.testnet.sonic.game',
 };
 
-const programKeypair = Keypair.generate();
-
-// Get the program ID from the keypair
-export const PROGRAM_ID = programKeypair.publicKey;
+export const PROGRAM_ID = new PublicKey("7qhC7bD9cDV9LTwjgVmGJHs5rGtrMY4pSBw1KswuaBfk");
 
 // Create connection instance
 export const sonicConnection = new Connection(SONIC_CONFIG.RPC_URL, 'confirmed');
 
-// Create a signer interface
-export const signer = {
-  publicKey: programKeypair.publicKey,
-  secretKey: programKeypair.secretKey,
-};
 
 // Export network configuration
 export const networkConfig = {
