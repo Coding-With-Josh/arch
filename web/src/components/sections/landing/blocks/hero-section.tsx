@@ -82,7 +82,7 @@ export function HeroSection({
       className={cn(
         "text-foreground",
         "py-12 sm:py-24 md:py-32 px-4 max-w-screen",
-        "overflow-hidden pb-0 relative",
+        "overflow-hidden pb-0",
         "bg-zinc-950"
       )}
     >

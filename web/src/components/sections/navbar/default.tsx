@@ -5,7 +5,7 @@ import { Profile } from "@/components/custom/profile";
 import { Button } from "@/components/ui/button";
 import { Cpu } from "lucide-react";
 import { MainNav } from "@/components/custom/navbar";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface UserData {
@@ -19,63 +19,80 @@ interface NavbarProps {
 }
 
 export default function Navbar({ userData }: NavbarProps) {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const currentScrollY = window.scrollY;
+      
+      // Show navbar at the top of the page
+      if (currentScrollY < 20) {
+        setIsVisible(true);
+      } else {
+        // Hide when scrolling down, show when scrolling up
+        setIsVisible(currentScrollY < lastScrollY);
+      }
+      
+      setLastScrollY(currentScrollY);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [lastScrollY]);
 
   return (
-    <motion.header
-      className={cn(
-        "fixed top-0 z-50 w-full border-b border-zinc-800/80 bg-zinc-950/70 backdrop-blur-md transition-all duration-300",
-        isScrolled ? "shadow-md" : ""
-      )}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: "easeInOut" }}
-    >
-      <div className="container mx-auto flex h-20 items-center px-4">
-        <div className="flex items-center gap-8">
-          <a href="/" className="flex items-center gap-2">
-            <motion.div
-              className="flex h-8 w-8 items-center justify-center rounded-md bg-blue-500"
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Cpu className="h-5 w-5 text-white" />
-            </motion.div>
-            <span className="text-lg font-bold text-zinc-100">Arch</span>
-          </a>
-          <MainNav />
-        </div>
-        <div className="ml-auto flex items-center gap-4">
-          {userData ? (
-            <Profile userData={userData} />
-          ) : (
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                className="text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800"
-                asChild
-              >
-                <a href="/sign-in">Sign in</a>
-              </Button>
-              <Button
-                className="bg-blue-600 text-white hover:bg-blue-700"
-                asChild
-              >
-                <a href="/sign-up">Get Started</a>
-              </Button>
+    <AnimatePresence>
+      {isVisible && (
+        <motion.header
+          className="fixed top-0 z-50 w-full"
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -100, opacity: 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+        >
+          <div className="mx-4 my-4">
+            <div className="container mx-auto rounded-full border border-zinc-800/30 bg-zinc-900/70 backdrop-blur-lg">
+              <div className="flex h-16 items-center px-6">
+                <div className="flex items-center gap-8">
+                  <a href="/" className="flex items-center gap-2">
+                    <motion.div
+                      className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-400"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Cpu className="h-5 w-5 text-white" />
+                    </motion.div>
+                    <span className="text-lg font-bold text-zinc-100">Arch</span>
+                  </a>
+                  <MainNav />
+                </div>
+                <div className="ml-auto flex items-center gap-4">
+                  {userData ? (
+                    <Profile userData={userData} />
+                  ) : (
+                    <div className="flex items-center gap-4">
+                      <Button
+                        variant="ghost"
+                        className="text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50"
+                        asChild
+                      >
+                        <a href="/sign-in">Sign in</a>
+                      </Button>
+                      <Button
+                        className="bg-gradient-to-r from-blue-600 to-blue-400 text-white hover:opacity-90"
+                        asChild
+                      >
+                        <a href="/sign-up">Get Started</a>
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-          )}
-        </div>
-      </div>
-    </motion.header>
+          </div>
+        </motion.header>
+      )}
+    </AnimatePresence>
   );
 }
