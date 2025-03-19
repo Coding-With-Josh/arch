@@ -4,9 +4,8 @@ import { useState, useEffect } from "react";
 import { Profile } from "@/components/custom/profile";
 import { Button } from "@/components/ui/button";
 import { Cpu } from "lucide-react";
-import { auth, currentUser } from "@clerk/nextjs/server";
 import { MainNav } from "@/components/custom/navbar";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface UserData {
@@ -15,9 +14,12 @@ interface UserData {
   imageUrl: string;
 }
 
-export default function Navbar() {
+interface NavbarProps {
+  userData: UserData | null;
+}
+
+export default function Navbar({ userData }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,22 +28,6 @@ export default function Navbar() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const user = await currentUser();
-      setUserData(
-        user
-          ? {
-              username: user.username || user.firstName || "User",
-              email: user.emailAddresses[0]?.emailAddress || "",
-              imageUrl: user.imageUrl || "",
-            }
-          : null
-      );
-    };
-    fetchData();
   }, []);
 
   return (
