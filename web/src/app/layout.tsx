@@ -23,19 +23,17 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider
-    
-     appearance={{
-
-      baseTheme: dark,
-    }}
+      appearance={{
+        baseTheme: dark,
+      }}
     >
-      <SonicProvider>
       <html lang="en">
         <body className={font.className}>
-          <ClientLayout>{children}</ClientLayout>
+          <SonicProvider>
+            <ClientLayout>{children}</ClientLayout>
+          </SonicProvider>
         </body>
       </html>
-      </SonicProvider>
     </ClerkProvider>
   );
 }
