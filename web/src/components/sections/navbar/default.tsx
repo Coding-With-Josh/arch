@@ -33,14 +33,14 @@ export default function Navbar({ userData }: NavbarProps) {
   return (
     <motion.header
       className={cn(
-        "fixed top-0 z-50 w-full border-b border-zinc-800 bg-blue-800/70 backdrop-blur-md transition-all duration-300",
+        "fixed top-0 z-50 w-full border-b border-zinc-800/80 bg-zinc-900/60 backdrop-blur-md transition-all duration-300",
         isScrolled ? "shadow-md" : ""
       )}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: "easeInOut" }}
     >
-      <div className="container mx-auto flex h-16 items-center px-4">
+      <div className="container mx-auto flex h-20 items-center px-4">
         <div className="flex items-center gap-8">
           <a href="/" className="flex items-center gap-2">
             <motion.div

@@ -35,19 +35,20 @@ export function WaitlistDialog({ trigger }: { trigger: React.ReactNode }) {
       <div onClick={() => setOpen(true)}>{trigger}</div>
       <DialogContent className="sm:max-w-[500px] border-zinc-800 bg-zinc-900/90 backdrop-blur-sm">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Join the Waitlist</DialogTitle>
-          <DialogDescription className="text-zinc-400">
+          <DialogTitle className="text-xl text-zinc-100">Join the Waitlist</DialogTitle>
+          <DialogDescription className="text-sm text-zinc-400">
             Be among the first to experience the future of development
             workflows.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email address</Label>
+            <Label htmlFor="email" className="text-zinc-300">Email address</Label>
             <Input
               id="email"
               type="email"
               placeholder="you@example.com"
+              className="border-zinc-800 bg-zinc-900 text-zinc-100 focus-visible:ring-blue-600"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
