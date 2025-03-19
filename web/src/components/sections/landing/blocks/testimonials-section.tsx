@@ -37,6 +37,10 @@ const testimonials = [
   }
 ]
 
+const TestimonialCard = motion.div
+const TextContainer = motion.div
+const LogoCloud = motion.div
+
 export function TestimonialsSection() {
   return (
     <section className="relative py-24 overflow-hidden bg-black">
@@ -47,9 +51,10 @@ export function TestimonialsSection() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]" />
 
       <div className="relative container mx-auto px-4">
-        <motion.div 
+        <TextContainer 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
@@ -58,14 +63,15 @@ export function TestimonialsSection() {
           <p className="mt-4 text-zinc-400 max-w-2xl mx-auto">
             Join thousands of developers and teams who are building the future with Arch.
           </p>
-        </motion.div>
+        </TextContainer>
 
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <motion.div
+            <TestimonialCard
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               transition={{ delay: index * 0.2 }}
               className={cn(
                 "relative p-6 rounded-2xl",
@@ -100,14 +106,15 @@ export function TestimonialsSection() {
                   </div>
                 </footer>
               </blockquote>
-            </motion.div>
+            </TestimonialCard>
           ))}
         </div>
 
         {/* Logos Cloud */}
-        <motion.div 
+        <LogoCloud 
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
           transition={{ delay: 0.5 }}
           className="mt-20 pt-10 border-t border-zinc-800"
         >
@@ -117,7 +124,7 @@ export function TestimonialsSection() {
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center justify-items-center opacity-50">
             {/* Add company logos here */}
           </div>
-        </motion.div>
+        </LogoCloud>
       </div>
     </section>
   )

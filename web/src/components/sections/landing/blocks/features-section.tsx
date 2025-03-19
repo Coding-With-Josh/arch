@@ -1,3 +1,5 @@
+"use client"
+
 import { motion } from "framer-motion"
 import { Code2, Boxes, Terminal } from "lucide-react"
 
@@ -22,6 +24,8 @@ const features = [
     }
 ]
 
+const FeatureCard = motion.div
+
 export function FeaturesSection() {
   return (
     <section className="py-24 relative overflow-hidden">
@@ -37,10 +41,11 @@ export function FeaturesSection() {
       <div className="container relative mx-auto px-4">
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <motion.div
+            <FeatureCard
               key={feature.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               transition={{ delay: index * 0.2 }}
               className="p-6 rounded-2xl bg-zinc-800/50 backdrop-blur border border-zinc-700"
             >
@@ -51,7 +56,7 @@ export function FeaturesSection() {
               <p className="text-zinc-400">
                 {feature.description}
               </p>
-            </motion.div>
+            </FeatureCard>
           ))}
         </div>
       </div>
