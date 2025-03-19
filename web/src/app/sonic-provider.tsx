@@ -30,7 +30,7 @@ export const SonicProvider: FC<Props> = ({ children }) => {
                 <div className="flex flex-col items-center gap-4">
                     <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
                     <p>Connecting to Sonic network...</p><br />
-                    <p>Program id: {programId.toString()}</p>
+                    <p>Program id: {PROGRAM_ID.toBase58()}</p>
                 </div>
             </div>
         );
