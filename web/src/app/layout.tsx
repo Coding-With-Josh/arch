@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import "./globals.css";
 import ClientLayout from "./client-layout";
+import { SonicProvider } from "./sonic-provider";
 
 const font = Inter({
   subsets: ["latin"],
@@ -20,12 +22,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+    
+     appearance={{
+
+      baseTheme: dark,
+    }}
+    >
+      <SonicProvider>
       <html lang="en">
         <body className={font.className}>
           <ClientLayout>{children}</ClientLayout>
         </body>
       </html>
+      </SonicProvider>
     </ClerkProvider>
   );
 }

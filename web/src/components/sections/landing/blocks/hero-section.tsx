@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import { ArrowRightIcon, TwitterIcon } from "lucide-react";
 import { useTheme } from "next-themes";
+import { motion } from "framer-motion";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -39,7 +42,7 @@ interface HeroProps {
     dark: string;
     alt: string;
   };
-} 
+}
 
 export function HeroSection({
   badge,
@@ -48,64 +51,132 @@ export function HeroSection({
   actions,
   image,
 }: HeroProps) {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const imageSrc = resolvedTheme === "light" ? image.light : image.dark;
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        delayChildren: 0.3,
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        ease: "easeInOut",
+      },
+    },
+  };
+
   return (
     <section
       className={cn(
         "text-foreground",
         "py-12 sm:py-24 md:py-32 px-4 w-screen",
-        "fade-bottom overflow-hidden pb-0",
-        "bg-zinc-950" // Add dark background
+        "overflow-hidden pb-0 relative",
+        "bg-zinc-950"
       )}
     >
-      <div className="mx-auto flex max-w-container flex-col gap-12 pt-16 sm:gap-24">
+      {/* Animated Background Blobs */}
+      <div className="absolute inset-0">
+        <motion.div
+          className="absolute top-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"
+          animate={{
+            x: [0, 50, 0],
+            y: [0, 20, 0],
+            rotate: [0, 360, 0],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            repeatType: "loop",
+            ease: "linear",
+          }}
+        />
+        <motion.div
+          className="absolute bottom-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl"
+          animate={{
+            x: [0, -50, 0],
+            y: [0, -20, 0],
+            rotate: [0, -360, 0],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            repeatType: "loop",
+            ease: "linear",
+          }}
+        />
+      </div>
+
+      <motion.div
+        className="mx-auto flex max-w-container flex-col gap-12 pt-16 sm:gap-24 relative z-10"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         <div className="flex flex-col items-center gap-6 text-center sm:gap-12">
           {/* Badge */}
           {badge && (
-            <Badge
-              variant="outline"
-              className="animate-appear gap-2 border-zinc-800 bg-zinc-900/50 flex items-center justify-center"
-            >
-              <TwitterIcon className="h-3 w-3 text-blue-600" strokeWidth={3} />
-              <span className="text-zinc-400">{badge.text}</span>
-              <a
-                href={badge.action.href}
-                className="flex items-center gap-1 text-white transition-all hover:scale-105 duration-300"
+            <motion.div variants={itemVariants}>
+              <Badge
+                variant="outline"
+                className="gap-2 border-zinc-800 bg-zinc-900/50 flex items-center justify-center hover:scale-105 transition-transform duration-300"
               >
-                {badge.action.text}
-                <ArrowRightIcon className="h-3 w-3" />
-              </a>
-            </Badge>
+                <TwitterIcon className="h-3 w-3 text-blue-600" strokeWidth={3} />
+                <span className="text-zinc-400">{badge.text}</span>
+                <a
+                  href={badge.action.href}
+                  className="flex items-center gap-1 text-white transition-all hover:scale-105 duration-300"
+                >
+                  {badge.action.text}
+                  <ArrowRightIcon className="h-3 w-3" />
+                </a>
+              </Badge>
+            </motion.div>
           )}
 
           {/* Title */}
-          <h1 className="relative z-10 inline-block animate-appear bg-gradient-to-r from-white via-zinc to-zinc-400 bg-clip-text text-4xl font-semibold leading-tight text-transparent drop-shadow-2xl sm:text-6xl sm:leading-tight md:text-8xl md:leading-tight">
+          <motion.h1
+            className="inline-block bg-gradient-to-r from-white via-zinc to-zinc-400 bg-clip-text text-4xl font-semibold leading-tight text-transparent drop-shadow-2xl sm:text-6xl sm:leading-tight md:text-8xl md:leading-tight"
+            variants={itemVariants}
+          >
             {title}
-          </h1>
+          </motion.h1>
 
           {/* Description */}
-          <p className="text-md relative z-10 max-w-[550px] animate-appear font-medium text-zinc-400 opacity-0 delay-100 sm:text-xl">
+          <motion.p
+            className="max-w-[550px] font-medium text-zinc-400 sm:text-xl"
+            variants={itemVariants}
+          >
             {description}
-          </p>
+          </motion.p>
 
           {/* Actions */}
-          <div className="relative z-10 flex animate-appear justify-center gap-4 opacity-0 delay-300">
-            <WaitlistDialog 
-              trigger={
-                <RainbowButton>
-                  Join Waitlist
-                </RainbowButton>
-              } 
+          <motion.div
+            className="flex justify-center gap-4"
+            variants={itemVariants}
+          >
+            <WaitlistDialog
+              trigger={<RainbowButton>Join Waitlist</RainbowButton>}
             />
-          </div>
+          </motion.div>
 
           {/* Image with Glow */}
-          <div className="relative pt-[4rem]">
-            <MockupFrame
-              className="animate-appear opacity-0 delay-700 dark:bg-zinc-900 dark:border-zinc-800"
-              size="small"
-            >
+          <motion.div
+            className="relative pt-[4rem]"
+            variants={itemVariants}
+          >
+            <MockupFrame className="dark:bg-zinc-900 dark:border-zinc-800 hover:scale-105 transition-transform duration-300">
               <Mockup type="responsive">
                 <Image
                   src={imageSrc}
@@ -116,13 +187,10 @@ export function HeroSection({
                 />
               </Mockup>
             </MockupFrame>
-            <Glow
-              variant="top"
-              className="animate-appear-zoom opacity-0 delay-1000"
-            />
-          </div>
+            <Glow variant="top" />
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

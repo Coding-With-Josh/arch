@@ -16,7 +16,7 @@ interface Props {
     children: ReactNode;
 }
 
-export const CustomWalletProvider: FC<Props> = ({ children }) => {
+export const SonicProvider: FC<Props> = ({ children }) => {
     // Using Sonic connection directly
     const [connection, setConnection] = useState<Connection | null>(null);
 
