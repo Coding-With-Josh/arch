@@ -8,7 +8,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { Connection } from '@solana/web3.js';
 import { SONIC_CONFIG } from '@/lib/sonic/sonic-config';
 import { sonicConnection } from '@/lib/sonic/sonic-config';
-import { PROGRAM_ID, programId, SONIC_NETWORK } from '@/lib/sonic/config';
+import { PROGRAM_ID} from '@/lib/sonic/config';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
@@ -30,7 +30,7 @@ export const SonicProvider: FC<Props> = ({ children }) => {
                 <div className="flex flex-col items-center gap-4">
                     <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
                     <p>Connecting to Sonic network...</p><br />
-                    <p>Program id: {PROGRAM_ID.toBase58()}</p>
+                    <p>Program id: {PROGRAM_ID ? PROGRAM_ID.toBase58() : 'Not Configured'}</p>
                 </div>
             </div>
         );

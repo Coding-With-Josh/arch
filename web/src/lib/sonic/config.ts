@@ -1,17 +1,20 @@
 import { Connection, Keypair, PublicKey } from '@solana/web3.js';
 
 // Sonic Testnet Configuration
-export const SONIC_RPC_URL = 'https://api.testnet.sonic.game';
 export const SONIC_NETWORK = 'testnet';
+export const SONIC_CONFIG = {
+  RPC_URL: process.env.NEXT_PUBLIC_SONIC_RPC_URL || 'https://api.testnet.sonic.game',
+  NETWORK: SONIC_NETWORK,
+  EXPLORER_URL: 'https://explorer.testnet.sonic.game',
+};
 
-// Create connection instance
-export const connection = new Connection(SONIC_RPC_URL, 'confirmed');
-
-// Create a new keypair
-export const programKeypair = Keypair.generate();
+const programKeypair = Keypair.generate();
 
 // Get the program ID from the keypair
-export const programId = programKeypair.publicKey;
+export const PROGRAM_ID = programKeypair.publicKey;
+
+// Create connection instance
+export const sonicConnection = new Connection(SONIC_CONFIG.RPC_URL, 'confirmed');
 
 // Create a signer interface
 export const signer = {
@@ -19,13 +22,10 @@ export const signer = {
   secretKey: programKeypair.secretKey,
 };
 
-// Program ID - Replace with your actual program ID
-export const PROGRAM_ID = new PublicKey('programId'); // Add your program ID once deployed
-
 // Export network configuration
 export const networkConfig = {
   name: SONIC_NETWORK,
-  endpoint: SONIC_RPC_URL,
-  connection: connection,
+  endpoint: SONIC_CONFIG.RPC_URL,
+  connection: sonicConnection,
   programId: PROGRAM_ID,
 };
