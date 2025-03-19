@@ -1,30 +1,42 @@
  "use client";
 
 import { motion } from "framer-motion";
-import { Code2, Boxes, Terminal } from "lucide-react";
+import { Code2, Boxes, Terminal, GitBranch, Github } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const features = [
-  {
-    title: "Multi-Ecosystem Integration",
-    description:
-      "Seamlessly work across different blockchain ecosystems and development environments",
-    icon: Boxes,
-    color: "text-blue-500",
-  },
-  {
-    title: "No-Code Builder",
-    description: "Build complex applications without writing a single line of code",
-    icon: Code2,
-    color: "text-purple-500",
-  },
-  {
-    title: "Arch Studio",
-    description:
-      "Professional-grade IDE and development environment built for the modern developer",
-    icon: Terminal,
-    color: "text-green-500",
-  },
+    {
+        title: "Multi-Ecosystem Integration",
+        description:
+            "Seamlessly work across different blockchain ecosystems and development environments",
+        icon: Boxes,
+        color: "text-blue-500",
+    },
+    {
+        title: "No-Code Builder",
+        description: "Build complex applications without writing a single line of code",
+        icon: Code2,
+        color: "text-purple-500",
+    },
+    {
+        title: "Arch Studio",
+        description:
+            "Professional-grade IDE and development environment built for the modern developer",
+        icon: Terminal,
+        color: "text-green-500",
+    },
+    {
+        title: "Built-in Version Control",
+        description: "Track changes and manage versions of your projects with our integrated version control system",
+        icon: GitBranch,
+        color: "text-orange-500",
+    },
+    {
+        title: "GitHub Integration",
+        description: "Connect and sync your projects directly with GitHub repositories for seamless collaboration",
+        icon: Github,
+        color: "text-cyan-500",
+    },
 ];
 
 const FeatureCard = ({ feature, index }: { feature: any; index: number }) => (
@@ -78,7 +90,7 @@ export function FeaturesSection() {
       </div>
 
       {/* Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]" />
+      {/* <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]" /> */}
 
       <div className="container relative mx-auto px-4">
         <div className="text-center mb-16">

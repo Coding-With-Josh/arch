@@ -78,7 +78,7 @@ const TestimonialCard = ({ testimonial, index }: { testimonial: any; index: numb
 
 export function TestimonialsSection() {
   return (
-    <section className="relative py-24 overflow-hidden bg-black">
+    <section className="relative py-24 overflow-hidden">
       {/* Animated Background Blobs */}
       <div className="absolute inset-0">
         <motion.div
@@ -112,7 +112,7 @@ export function TestimonialsSection() {
       </div>
 
       {/* Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]" />
+      {/* <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]" /> */}
 
       <div className="relative container mx-auto px-4">
         <motion.div
