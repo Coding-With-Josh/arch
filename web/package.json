@@ -13,6 +13,7 @@
     "@clerk/nextjs": "^6.11.0",
     "@codesandbox/sandpack-react": "^2.20.0",
     "@codesandbox/sdk": "^0.8.1",
+    "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^3.10.0",
     "@monaco-editor/react": "^4.7.0",
     "@paddle/paddle-js": "^1.4.0",
