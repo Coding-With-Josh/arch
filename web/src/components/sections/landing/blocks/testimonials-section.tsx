@@ -78,7 +78,7 @@ const TestimonialCard = ({ testimonial, index }: { testimonial: any; index: numb
 
 export function TestimonialsSection() {
   return (
-    <section className="relative py-24 overflow-hidden">
+    <section className="py-24 overflow-hidden">
       {/* Animated Background Blobs */}
       <div className="absolute inset-0">
         <motion.div

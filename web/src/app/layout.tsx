@@ -5,6 +5,7 @@ import { dark } from "@clerk/themes";
 import "./globals.css";
 import ClientLayout from "./client-layout";
 import { SonicProvider } from "./sonic-provider";
+import { Toaster } from "sonner";
 
 const font = Inter({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={font.className}>
           <SonicProvider>
+            <Toaster />
             <ClientLayout>{children}</ClientLayout>
           </SonicProvider>
         </body>

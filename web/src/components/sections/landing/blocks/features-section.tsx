@@ -56,7 +56,7 @@ const FeatureCard = ({ feature, index }: { feature: any; index: number }) => (
 
 export function FeaturesSection() {
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section className="py-24 overflow-hidden">
       {/* Animated Background Blobs */}
       <div className="absolute inset-0">
         <motion.div
